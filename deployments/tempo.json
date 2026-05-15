@@ -1,0 +1,19 @@
+{
+  "network": "tempo",
+  "chainId": 4217,
+  "contractAddress": "0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f",
+  "txHash": "0x0ce34abd7eb43378b8c073f5a340145842e830aaf93d4a98803e31c8e8877176",
+  "blockNumber": 20096085,
+  "gasUsed": 11871593,
+  "stablecoin": {
+    "symbol": "USDC.e",
+    "address": "0x20C000000000000000000000b9537d11c60E8b50",
+    "decimals": 6
+  },
+  "oracle": "0xed2B5717c9b936ecC76d75401026A99143e278F5",
+  "scheduler": null,
+  "oracleFee": "0",
+  "feeBps": 200,
+  "deployedAt": "2026-05-15T11:22:31.633Z",
+  "deployedBy": "0xed2b5717c9b936ecc76d75401026a99143e278f5"
+}
