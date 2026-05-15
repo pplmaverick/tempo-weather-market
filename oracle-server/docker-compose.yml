@@ -1,0 +1,18 @@
+services:
+  oracle:
+    build: .
+    container_name: weather-oracle
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    networks:
+      - oracle-net
+
+networks:
+  oracle-net:
+    name: oracle-net
+    # 若要和 n8n 同一個 network，把 n8n 的 network name 填到這裡
+    # external: true
+    # name: n8n_default   # 執行 `docker network ls` 確認 n8n 的 network 名稱
