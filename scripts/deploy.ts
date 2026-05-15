@@ -118,38 +118,114 @@ async function main() {
 
   console.log("\n送出部署交易...");
 
-  // Tempo 網路無 native gas token，gas 比 Ethereum 貴 5-10 倍
-  // 且對新地址的 transfer 額外耗費 ~300k gas
-  // 本地 hardhat 不設限；testnet/mainnet 設 15_000_000
-  const gasLimit = networkName === "hardhat" ? undefined : 15_000_000n;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let weatherMarket: any;
+  let txHash: `0x${string}`;
+  let contractAddress: `0x${string}`;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let receipt: any;
 
-  const { contract: weatherMarket, deploymentTransaction } =
-    await connection.viem.sendDeploymentTransaction("WeatherMarket", [
-      stablecoinAddress,
-      oracleAddress,
-      schedulerAddress,
-      oracleFee,
-    ], gasLimit !== undefined ? { gas: gasLimit } : {});
+  if (networkName === "tempo") {
+    // Tempo 主網：沒有 native gas token，必須用 Tempo transaction type (0x76)
+    // 在 chain 設定 feeToken，prepareTransactionRequest hook 自動帶入交易
+    // Tempo 的自訂 serializer 會產生 0x76 前綴的交易，Fee AMM 再用 USDCE 付 gas
+    const { tempo: tempoViemChain } = await import("viem/chains");
+    const {
+      createWalletClient,
+      createPublicClient: viemPublicClient,
+      http: viemHttp,
+      encodeDeployData,
+    } = await import("viem");
+    const { privateKeyToAccount: pkToAccount } = await import("viem/accounts");
 
-  console.log(`Tx hash: ${deploymentTransaction.hash}`);
-  console.log("等待上鏈確認...");
+    const rawKey = process.env.PRIVATE_KEY!;
+    if (!rawKey) throw new Error(".env 缺少 PRIVATE_KEY");
+    const tempoAccount = pkToAccount(
+      (rawKey.startsWith("0x") ? rawKey : `0x${rawKey}`) as `0x${string}`
+    );
 
-  const receipt = await publicClient.waitForTransactionReceipt({
-    hash: deploymentTransaction.hash,
-  });
+    const rpcUrl = process.env.TEMPO_RPC_URL ?? "https://rpc.tempo.xyz";
 
-  if (receipt.status !== "success") {
-    throw new Error(`部署交易 revert，hash: ${deploymentTransaction.hash}`);
+    // feeToken 設在 chain → prepareTransactionRequest hook 會寫入 request，
+    // 進而觸發 Tempo serializer（類似 Celo 的 feeCurrency 機制）
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tempoChain = { ...tempoViemChain, feeToken: stablecoinAddress as any };
+
+    const tempoWallet = createWalletClient({
+      account: tempoAccount,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      chain: tempoChain as any,
+      transport: viemHttp(rpcUrl),
+    });
+
+    const tempoPublic = viemPublicClient({
+      chain: tempoViemChain,
+      transport: viemHttp(rpcUrl),
+    });
+
+    const artifact = await hre.artifacts.readArtifact("WeatherMarket");
+    const deployData = encodeDeployData({
+      abi: artifact.abi,
+      bytecode: artifact.bytecode as `0x${string}`,
+      args: [stablecoinAddress, oracleAddress, schedulerAddress, oracleFee],
+    });
+
+    console.log(`  Tempo tx type 0x76, feeToken: ${stablecoinAddress}`);
+
+    // gas 明確帶入 → 跳過 eth_estimateGas；feeToken 由 chain hook 注入
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    txHash = await (tempoWallet as any).sendTransaction({
+      data: deployData,
+      gas: 15_000_000n,
+    });
+
+    console.log(`Tx hash: ${txHash}`);
+    console.log("等待上鏈確認...");
+
+    receipt = await tempoPublic.waitForTransactionReceipt({ hash: txHash });
+
+    if (receipt.status !== "success") {
+      throw new Error(`部署交易 revert，hash: ${txHash}`);
+    }
+
+    contractAddress = receipt.contractAddress as `0x${string}`;
+    if (!contractAddress) throw new Error("receipt 缺少 contractAddress，部署可能失敗");
+
+    weatherMarket = await connection.viem.getContractAt("WeatherMarket", contractAddress);
+
+  } else {
+    // hardhat / moderato：pathUSD 是 native token，可直接用 sendDeploymentTransaction
+    const gasLimit = networkName === "hardhat" ? undefined : 15_000_000n;
+
+    const { contract, deploymentTransaction } =
+      await connection.viem.sendDeploymentTransaction("WeatherMarket", [
+        stablecoinAddress,
+        oracleAddress,
+        schedulerAddress,
+        oracleFee,
+      ], gasLimit !== undefined ? { gas: gasLimit } : {});
+
+    txHash = deploymentTransaction.hash;
+
+    console.log(`Tx hash: ${txHash}`);
+    console.log("等待上鏈確認...");
+
+    receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+
+    if (receipt.status !== "success") {
+      throw new Error(`部署交易 revert，hash: ${txHash}`);
+    }
+
+    contractAddress = contract.address;
+    weatherMarket = contract;
   }
-
-  const contractAddress = weatherMarket.address;
 
   console.log(`\n✓ 部署成功`);
   console.log(`  合約地址:  ${contractAddress}`);
   console.log(`  區塊高度:  ${receipt.blockNumber}`);
   console.log(`  Gas 使用:  ${receipt.gasUsed.toLocaleString()}`);
   if (cfg.explorerTx) {
-    console.log(`  Explorer:  ${cfg.explorerTx}/${deploymentTransaction.hash}`);
+    console.log(`  Explorer:  ${cfg.explorerTx}/${txHash}`);
   }
 
   // ── 驗證鏈上讀取 ────────────────────────────────────────────────────────────
@@ -214,7 +290,7 @@ async function main() {
     network: networkName,
     chainId: await publicClient.getChainId(),
     contractAddress,
-    txHash: deploymentTransaction.hash,
+    txHash,
     blockNumber: Number(receipt.blockNumber),
     gasUsed: Number(receipt.gasUsed),
     stablecoin: {
