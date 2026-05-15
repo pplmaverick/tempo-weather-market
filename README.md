@@ -9,6 +9,19 @@ Users bet on weather outcomes (e.g., tomorrow's high temperature in Tokyo) using
 - **Testnet (Moderato):** `0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953`
 - **Mainnet:** `0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f`
 
+## Why Tempo-Native
+
+This project wasn't ported from another chain. Every design decision maps directly to a Tempo protocol capability, and the contract would look meaningfully different — or require off-chain workarounds — on a generic EVM chain.
+
+| Problem | Generic EVM approach | Tempo-native approach |
+|---------|----------------------|----------------------|
+| Oracle needs compensation for settlement work | Side payment, then manual verification | MPP — fee collected atomically inside `submitResult()` |
+| Prove what outcome was settled and why | Parse event logs after the fact | Payment Memo — structured string written on-chain at settlement time |
+| Users shouldn't need gas tokens just to place a bet | Require users to bridge and hold native token | Fee Sponsorship — relayer submits the tx, `gasTank` covers the cost |
+| Market must stop accepting bets at a precise time | External keeper or cron job | Scheduled Transactions — `IScheduler` precompile called from within `createMarket()` |
+
+The result is a contract that handles its own lifecycle end-to-end: markets lock themselves, oracle payments are enforced by the contract rather than by trust, and bettors interact with a single stablecoin approval.
+
 ## Core Features
 
 ### MPP (Monetized Protocol Primitives)
