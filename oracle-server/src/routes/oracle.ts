@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { getMarket, getOracleFee, submitResult, verifyPathUSDTransfer, account } from "../services/chain.js";
+import { getMarket, getOracleFee, submitResult, verifyPathUSDTransfer, account, networkInfo } from "../services/chain.js";
 import { getMaxTemp } from "../services/weather.js";
 import { buildChallenge, verifyNonce, isTxUsed, markTxUsed } from "../services/payment.js";
 
@@ -53,7 +53,7 @@ oracleRouter.post("/settle", async (req: Request, res: Response) => {
       const challenge = buildChallenge(Number(marketId), oracleFee);
       return res.status(402).json({
         status: 402,
-        message: `請先付款 ${oracleFee} pathUSD 到 ${account.address}，再帶 paymentTxHash 重試`,
+        message: `請先付款 ${oracleFee} ${networkInfo.stablecoinSymbol} 到 ${account.address}，再帶 paymentTxHash 重試`,
         payment: challenge,
       });
     }
@@ -150,9 +150,12 @@ oracleRouter.get("/market/:marketId", async (req: Request, res: Response) => {
 oracleRouter.get("/health", (_req: Request, res: Response) => {
   return res.json({
     status: "ok",
+    network: networkInfo.network,
+    chainId: networkInfo.chainId,
     oracle: account.address,
-    contract: process.env.CONTRACT_ADDRESS,
-    rpc: process.env.RPC_URL,
+    contract: networkInfo.contractAddress,
+    stablecoin: networkInfo.stablecoinSymbol,
+    rpc: networkInfo.rpcUrl,
     timestamp: Math.floor(Date.now() / 1000),
   });
 });

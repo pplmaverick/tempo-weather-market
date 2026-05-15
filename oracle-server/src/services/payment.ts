@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import type { PaymentChallenge } from "../types.js";
+import { networkInfo } from "./chain.js";
 
 const ORACLE_SECRET = process.env.ORACLE_SECRET!;
 const NONCE_TTL_SECS = 600; // 10 分鐘
@@ -48,10 +49,10 @@ export function buildChallenge(
   const ts = parseInt(nonce.split(".")[0], 10);
 
   return {
-    token: process.env.PATHUSD_ADDRESS!,
+    token: networkInfo.stablecoinAddress,
     amount: oracleFee.toString(),
     recipient: process.env.ORACLE_ADDRESS!,
-    chainId: 42431,
+    chainId: networkInfo.chainId,
     nonce,
     expiresAt: ts + NONCE_TTL_SECS,
   };

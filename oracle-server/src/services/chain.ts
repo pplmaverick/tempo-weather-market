@@ -2,21 +2,49 @@ import {
   createPublicClient,
   createWalletClient,
   http,
-  defineChain,
 } from "viem";
+import { tempo as tempoMainnetChain, tempoModerato as tempoTestnetChain } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import type { MarketData, SettlementReceipt } from "../types.js";
 
-// ─── Tempo Moderato 鏈定義 ────────────────────────────────────────────────────
+// ─── 網路選擇 ─────────────────────────────────────────────────────────────────
 
-const tempoModerato = defineChain({
-  id: 42431,
-  name: "Tempo Moderato",
-  nativeCurrency: { name: "pathUSD", symbol: "pathUSD", decimals: 18 },
-  rpcUrls: {
-    default: { http: [process.env.RPC_URL ?? "https://rpc.moderato.tempo.xyz"] },
-  },
-});
+const TEMPO_NETWORK = (process.env.TEMPO_NETWORK ?? "testnet") as "testnet" | "mainnet";
+const isMainnet = TEMPO_NETWORK === "mainnet";
+
+const activeRpcUrl = isMainnet
+  ? (process.env.RPC_MAINNET ?? "https://rpc.tempo.xyz")
+  : (process.env.RPC_URL ?? "https://rpc.moderato.tempo.xyz");
+
+const activeContractAddress = (
+  isMainnet ? process.env.CONTRACT_ADDRESS_MAINNET : process.env.CONTRACT_ADDRESS
+) as `0x${string}`;
+
+const activeStablecoinAddress = (
+  isMainnet ? process.env.USDCE_ADDRESS : process.env.PATHUSD_ADDRESS
+) as `0x${string}`;
+
+// networkInfo 供其他模組讀取（payment.ts, routes/oracle.ts, index.ts）
+export const networkInfo = {
+  network: TEMPO_NETWORK,
+  chainId: isMainnet ? 4217 : 42431,
+  rpcUrl: activeRpcUrl,
+  contractAddress: activeContractAddress,
+  stablecoinAddress: activeStablecoinAddress,
+  stablecoinSymbol: isMainnet ? "USDCE" : "pathUSD",
+  stablecoinDecimals: isMainnet ? 6 : 18,
+} as const;
+
+// ─── Chain 定義 ───────────────────────────────────────────────────────────────
+//
+// testnet（moderato, chainId 42431）：pathUSD 是 native token，標準 EIP-1559 即可
+// mainnet（tempo, chainId 4217）：無 native gas token，需設 feeToken 讓 Fee AMM
+//   用 USDCE 付 gas，viem 的 tempo chain 內建 0x76 serializer 和 hook 自動注入
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const activeChain: any = isMainnet
+  ? { ...tempoMainnetChain, feeToken: activeStablecoinAddress }
+  : tempoTestnetChain;
 
 // ─── ABI（JSON 格式，避免 abitype 不支援 human-readable tuple 回傳）────────────
 
@@ -91,23 +119,21 @@ export const account = privateKeyToAccount(
 );
 
 export const publicClient = createPublicClient({
-  chain: tempoModerato,
-  transport: http(process.env.RPC_URL),
+  chain: activeChain,
+  transport: http(activeRpcUrl),
 });
 
 const walletClient = createWalletClient({
   account,
-  chain: tempoModerato,
-  transport: http(process.env.RPC_URL),
+  chain: activeChain,
+  transport: http(activeRpcUrl),
 });
-
-const contractAddress = process.env.CONTRACT_ADDRESS as `0x${string}`;
 
 // ─── 公開函式 ─────────────────────────────────────────────────────────────────
 
 export async function getMarket(marketId: number): Promise<MarketData> {
   const result = (await publicClient.readContract({
-    address: contractAddress,
+    address: activeContractAddress,
     abi: MARKET_ABI,
     functionName: "getMarket",
     args: [BigInt(marketId)],
@@ -127,7 +153,7 @@ export async function getMarket(marketId: number): Promise<MarketData> {
 
 export async function getOracleFee(): Promise<bigint> {
   return (await publicClient.readContract({
-    address: contractAddress,
+    address: activeContractAddress,
     abi: MARKET_ABI,
     functionName: "oracleFee",
   })) as bigint;
@@ -138,9 +164,11 @@ export async function submitResult(
   finalTemp: number,
   memo: string
 ): Promise<SettlementReceipt> {
-  // Tempo 部署 gas 高，submitResult 也設高一點
-  const txHash = await walletClient.writeContract({
-    address: contractAddress,
+  // mainnet 的 writeContract 會透過 feeToken chain hook 產生 Tempo 0x76 交易
+  // testnet 的 writeContract 用標準 EIP-1559（pathUSD 是 native token）
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const txHash = await (walletClient as any).writeContract({
+    address: activeContractAddress,
     abi: MARKET_ABI,
     functionName: "submitResult",
     args: [BigInt(marketId), BigInt(finalTemp), memo],
@@ -152,15 +180,13 @@ export async function submitResult(
     throw new Error(`submitResult tx revert: ${txHash}`);
   }
 
-  // 從鏈上讀取結算回執
   const onchainReceipt = (await publicClient.readContract({
-    address: contractAddress,
+    address: activeContractAddress,
     abi: MARKET_ABI,
     functionName: "getReceipt",
     args: [BigInt(marketId)],
   })) as { finalTemp: bigint; winningBucket: number; noWinner: boolean; memo: string; timestamp: bigint };
 
-  // 取得市場資料（city/predictionType）
   const market = await getMarket(marketId);
 
   return {
@@ -176,7 +202,7 @@ export async function submitResult(
   };
 }
 
-// pathUSD Transfer event log 驗證（MPP fee > 0 時使用）
+// stablecoin Transfer event log 驗證（MPP fee > 0 時使用）
 export async function verifyPathUSDTransfer(
   txHash: string,
   expectedAmount: bigint,
@@ -187,15 +213,14 @@ export async function verifyPathUSDTransfer(
   });
   if (!receipt || receipt.status !== "success") return false;
 
-  const PATHUSD = (process.env.PATHUSD_ADDRESS ?? "").toLowerCase();
+  const STABLECOIN = activeStablecoinAddress.toLowerCase();
   const TO = toAddress.toLowerCase();
 
-  // 找 pathUSD Transfer(from, to=oracle, amount>=oracleFee) log
   const transferTopic =
     "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 
-  const matched = receipt.logs.find((log) => {
-    if (log.address.toLowerCase() !== PATHUSD) return false;
+  const matched = receipt.logs.find((log: { address: string; topics: (`0x${string}` | undefined)[]; data: `0x${string}` }) => {
+    if (log.address.toLowerCase() !== STABLECOIN) return false;
     if (log.topics[0] !== transferTopic) return false;
     const toInLog = `0x${log.topics[2]?.slice(26)}`.toLowerCase();
     if (toInLog !== TO) return false;
