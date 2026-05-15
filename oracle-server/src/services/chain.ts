@@ -2,7 +2,6 @@ import {
   createPublicClient,
   createWalletClient,
   http,
-  parseAbi,
   defineChain,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -19,18 +18,68 @@ const tempoModerato = defineChain({
   },
 });
 
-// ─── ABI（只含用到的函式）────────────────────────────────────────────────────
+// ─── ABI（JSON 格式，避免 abitype 不支援 human-readable tuple 回傳）────────────
 
-const MARKET_ABI = parseAbi([
-  "function getMarket(uint256 marketId) view returns (string city, string predictionType, uint256 targetDate, uint256 lockTime, uint8 status, uint256 totalPool, int256 finalTemp, uint8 winningBucket, int256[] buckets, bool noWinner, string settleMemo)",
-  "function submitResult(uint256 marketId, int256 finalTemp, string memo) returns (tuple(uint256 marketId, int256 finalTemp, uint8 winningBucket, bool noWinner, string memo, uint256 timestamp, address submittedBy) receipt)",
-  "function getReceipt(uint256 marketId) view returns (tuple(uint256 marketId, int256 finalTemp, uint8 winningBucket, bool noWinner, string memo, uint256 timestamp, address submittedBy) receipt)",
-  "function oracleFee() view returns (uint256)",
-]);
+const RECEIPT_COMPONENTS = [
+  { name: "marketId",      type: "uint256"  },
+  { name: "finalTemp",     type: "int256"   },
+  { name: "winningBucket", type: "uint8"    },
+  { name: "noWinner",      type: "bool"     },
+  { name: "memo",          type: "string"   },
+  { name: "timestamp",     type: "uint256"  },
+  { name: "submittedBy",   type: "address"  },
+] as const;
 
-const ERC20_TRANSFER_ABI = parseAbi([
-  "event Transfer(address indexed from, address indexed to, uint256 value)",
-]);
+const MARKET_ABI = [
+  {
+    name: "getMarket",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "marketId", type: "uint256" }],
+    outputs: [
+      { name: "city",           type: "string"   },
+      { name: "predictionType", type: "string"   },
+      { name: "targetDate",     type: "uint256"  },
+      { name: "lockTime",       type: "uint256"  },
+      { name: "status",         type: "uint8"    },
+      { name: "totalPool",      type: "uint256"  },
+      { name: "finalTemp",      type: "int256"   },
+      { name: "winningBucket",  type: "uint8"    },
+      { name: "buckets",        type: "int256[]" },
+      { name: "noWinner",       type: "bool"     },
+      { name: "settleMemo",     type: "string"   },
+    ],
+  },
+  {
+    name: "submitResult",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "marketId",  type: "uint256" },
+      { name: "finalTemp", type: "int256"  },
+      { name: "memo",      type: "string"  },
+    ],
+    outputs: [
+      { name: "receipt", type: "tuple", components: RECEIPT_COMPONENTS },
+    ],
+  },
+  {
+    name: "getReceipt",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "marketId", type: "uint256" }],
+    outputs: [
+      { name: "receipt", type: "tuple", components: RECEIPT_COMPONENTS },
+    ],
+  },
+  {
+    name: "oracleFee",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
 
 // ─── Clients ──────────────────────────────────────────────────────────────────
 
