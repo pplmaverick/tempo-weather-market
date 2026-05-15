@@ -1,0 +1,19 @@
+{
+  "network": "moderato",
+  "chainId": 42431,
+  "contractAddress": "0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953",
+  "txHash": "0xef0e0697d374c95cac7ecd168170dde39fe0d70076215d655739771bd9bede32",
+  "blockNumber": 17631934,
+  "gasUsed": 11621497,
+  "stablecoin": {
+    "symbol": "pathUSD",
+    "address": "0x20c0000000000000000000000000000000000000",
+    "decimals": 18
+  },
+  "oracle": "0xed2B5717c9b936ecC76d75401026A99143e278F5",
+  "scheduler": null,
+  "oracleFee": "0",
+  "feeBps": 200,
+  "deployedAt": "2026-05-15T09:33:52.534Z",
+  "deployedBy": "0xed2b5717c9b936ecc76d75401026a99143e278f5"
+}

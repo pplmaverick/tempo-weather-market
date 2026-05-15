@@ -1,0 +1,14 @@
+# 環境變數（含私鑰，絕對不能提交）
+.env
+.env.local
+
+# Hardhat 編譯產物
+artifacts/
+cache/
+dist/
+
+# Node modules
+node_modules/
+
+# Hardhat Ignition 部署記錄（含敏感地址資訊，視需求決定是否提交）
+ignition/deployments/
