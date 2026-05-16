@@ -172,7 +172,7 @@ export async function submitResult(
     abi: MARKET_ABI,
     functionName: "submitResult",
     args: [BigInt(marketId), BigInt(finalTemp), memo],
-    gas: 500_000n,
+    gas: 3_000_000n, // mainnet submitResult 需要 ~2.35M gas
   });
 
   const txReceipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
