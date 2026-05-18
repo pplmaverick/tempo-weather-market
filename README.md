@@ -170,15 +170,15 @@ Temperatures are stored as `int256` with one decimal place precision:
 -12 = -1.2°C
 ```
 
-Given `buckets = [25, 28, 31, 34]`:
+Bucket boundaries use the same x10 encoding as temperatures. Given `buckets = [250, 280, 310, 340]`:
 
 | Bucket | Range |
 |---|---|
-| 0 | ≤ 25°C |
-| 1 | 26°C – 28°C |
-| 2 | 29°C – 31°C |
-| 3 | 32°C – 34°C |
-| 4 | > 34°C |
+| 0 | ≤ 25.0°C |
+| 1 | 25.1°C – 28.0°C |
+| 2 | 28.1°C – 31.0°C |
+| 3 | 31.1°C – 34.0°C |
+| 4 | > 34.0°C |
 
 ## Fees & Security
 
