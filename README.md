@@ -211,9 +211,10 @@ Given `buckets = [25, 28, 31, 34]`:
 - ✅ P3 — Core contracts deployed: Tempo-native MPP, Payment Memo, Fee Sponsorship, Scheduled Transactions
 - ✅ P4 — Oracle server deployed to VPS (Docker Compose, dual-network switching via `TEMPO_NETWORK` env var)
 - ✅ P5 — Mainnet deployment (`0x072a3a...531f`)
-- ⬜ P6 — End-to-end testnet flow: create market → place bet → oracle settlement → claim winnings
-- ⬜ P7 — First live mainnet market with real USDC.e stakes
-- ⬜ P8 — Multi-city expansion (Taipei / Tokyo / Bangkok), decentralized oracle integration
+- ✅ P6 — 40/40 tests passing (deployment / createMarket / placeBet / lockMarket / submitResult+MPP / claimWinnings / Fee Sponsorship / Gas Tank / admin)
+- ⬜ P7 — End-to-end testnet flow: create market → place bet → oracle settlement → claim winnings
+- ⬜ P8 — First batch improvements: oracle retry logic, frontend, Oracle server Dockerized, multi-city support (Tokyo / New York / Seoul)
+- ⬜ P9 — Second batch: multi-source weather median (OpenWeather + WeatherAPI), structured settlement log, TypeScript SDK (`createMarket`, `placeBet` wrappers)
 
 ## Developer
 
@@ -223,3 +224,4 @@ Wallet: `0xed2B...78F5` — deployed on both Tempo Testnet and Mainnet
 ## License
 
 MIT
+
