@@ -1,53 +1,31 @@
 # Tempo Weather Market
 
-A decentralized weather prediction market built on the [Tempo](https://tempo.xyz) blockchain, showcasing four native Tempo protocol features: **MPP**, **Payment Memo**, **Fee Sponsorship**, and **Scheduled Transactions**.
+![Tempo Mainnet](https://img.shields.io/badge/Tempo_Mainnet-4217-blue)
+![Tempo Testnet](https://img.shields.io/badge/Tempo_Testnet-42431-gray)
+![Solidity](https://img.shields.io/badge/Solidity-0.8.28-purple)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## Overview
+A decentralized weather prediction market built natively on the Tempo blockchain. Every design decision maps to a Tempo protocol primitive — MPP, Payment Memo, Fee Sponsorship, and Scheduled Transactions — making this a purpose-built implementation, not an EVM port.
 
-Users bet on weather outcomes (e.g., tomorrow's high temperature in Tokyo) using stablecoins. An oracle server fetches real weather data after the market closes, settles the contract, and pays out winners — all on-chain, automated, and trustless.
+**Deployed on both Testnet and Mainnet.**
 
-- **Testnet (Moderato):** `0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953`
-- **Mainnet:** `0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f`
+| Network | Contract Address |
+|---|---|
+| Tempo Mainnet (4217) | `0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f` |
+| Tempo Moderato Testnet (42431) | `0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953` |
 
 ## Why Tempo-Native
 
 This project wasn't ported from another chain. Every design decision maps directly to a Tempo protocol capability, and the contract would look meaningfully different — or require off-chain workarounds — on a generic EVM chain.
 
 | Problem | Generic EVM approach | Tempo-native approach |
-|---------|----------------------|----------------------|
+|---|---|---|
 | Oracle needs compensation for settlement work | Side payment, then manual verification | MPP — fee collected atomically inside `submitResult()` |
 | Prove what outcome was settled and why | Parse event logs after the fact | Payment Memo — structured string written on-chain at settlement time |
-| Users shouldn't need gas tokens just to place a bet | Require users to bridge and hold native token | Fee Sponsorship — relayer submits the tx, `gasTank` covers the cost |
-| Market must stop accepting bets at a precise time | External keeper or cron job | Scheduled Transactions — `IScheduler` precompile called from within `createMarket()` |
+| Users shouldn't need gas tokens just to place a bet | Require users to bridge and hold native token | Fee Sponsorship — relayer submits the tx, gasTank covers the cost |
+| Market must stop accepting bets at a precise time | External keeper or cron job | Scheduled Transactions — IScheduler precompile called from within `createMarket()` |
 
 The result is a contract that handles its own lifecycle end-to-end: markets lock themselves, oracle payments are enforced by the contract rather than by trust, and bettors interact with a single stablecoin approval.
-
-## Core Features
-
-### MPP (Monetized Protocol Primitives)
-The oracle calls `submitResult()` to settle markets. When `oracleFee > 0`, the caller must first transfer stablecoins to the oracle address and provide a verified `paymentTxHash`. The contract records a `SettlementReceipt` for every settled market, queryable via `getReceipt(marketId)`.
-
-### Payment Memo
-Every settlement writes a structured memo to the contract:
-```
-{city}/{predictionType}/{finalTemp}/{outcome}
-// e.g. "Tokyo/HIGH_TEMP/315/WIN"
-```
-The memo is emitted in the `ResultSubmitted` event and stored on-chain, providing a human-readable audit trail for each market outcome.
-
-### Fee Sponsorship
-A `gasTank` mechanism allows the contract owner to pre-fund gas costs so that users can bet without holding the native fee token. Approved relayers call `placeBetFor(marketId, bucket, amount, bettor)` on behalf of users — bettors only need to hold and approve the stablecoin.
-
-### Scheduled Transactions
-When creating a market, the contract calls the `IScheduler` precompile to schedule an automatic `lockMarket()` call at `lockTime`. No off-chain cron jobs needed for market locking.
-
-```solidity
-bytes32 taskId = IScheduler(scheduler).schedule(
-    address(this),
-    abi.encodeCall(this.lockMarket, (marketId)),
-    lockTime
-);
-```
 
 ## Architecture
 
@@ -62,101 +40,106 @@ oracle-server (Express + TypeScript)
          └── WeatherMarket.sol  ← submitResult() on-chain
 ```
 
-**Stack:**
-- Smart contract: Solidity `^0.8.28`, OpenZeppelin 5.x
-- Development: Hardhat 3 + Viem
-- Oracle server: Node.js + Express + TypeScript
-- Automation: n8n workflow
-- Testnet stablecoin: pathUSD (`0x20c0000000000000000000000000000000000000`)
-- Mainnet stablecoin: USDC.e (`0x20C000000000000000000000b9537d11c60E8b50`)
+## Core Features
+
+### MPP (Monetized Protocol Primitives)
+
+The oracle calls `submitResult()` to settle markets. When `oracleFee > 0`, the caller must first transfer stablecoins to the oracle address and provide a verified `paymentTxHash`. The contract records a `SettlementReceipt` for every settled market, queryable via `getReceipt(marketId)`.
+
+### Payment Memo
+
+Every settlement writes a structured memo to the contract:
+
+```
+{city}/{predictionType}/{finalTemp}/{outcome}
+// e.g. "Tokyo/HIGH_TEMP/315/WIN"
+```
+
+The memo is emitted in the `ResultSubmitted` event and stored on-chain, providing a human-readable audit trail for each market outcome.
+
+### Fee Sponsorship
+
+A `gasTank` mechanism allows the contract owner to pre-fund gas costs so that users can bet without holding the native fee token. Approved relayers call `placeBetFor(marketId, bucket, amount, bettor)` on behalf of users — bettors only need to hold and approve the stablecoin.
+
+### Scheduled Transactions
+
+When creating a market, the contract calls the `IScheduler` precompile to schedule an automatic `lockMarket()` call at `lockTime`. No off-chain cron jobs needed for market locking.
+
+```solidity
+bytes32 taskId = IScheduler(scheduler).schedule(
+    address(this),
+    abi.encodeCall(this.lockMarket, (marketId)),
+    lockTime
+);
+```
 
 ## Network Information
 
 | Network | Chain ID | RPC | Explorer |
-|---------|----------|-----|----------|
-| Tempo Moderato (Testnet) | 42431 | `https://rpc.moderato.tempo.xyz` | `https://explorer.moderato.tempo.xyz` |
-| Tempo (Mainnet) | 4217 | `https://rpc.tempo.xyz` | `https://explorer.tempo.xyz` |
+|---|---|---|---|
+| Tempo Moderato (Testnet) | 42431 | https://rpc.moderato.tempo.xyz | https://explorer.moderato.tempo.xyz |
+| Tempo (Mainnet) | 4217 | https://rpc.tempo.xyz | https://explorer.tempo.xyz |
+
+**Stablecoin addresses**
+
+| Network | Token | Address |
+|---|---|---|
+| Testnet | pathUSD | `0x20c0000000000000000000000000000000000000` |
+| Mainnet | USDC.e | `0x20C000000000000000000000b9537d11c60E8b50` |
 
 ## Quick Start
 
-### Prerequisites
-
+**Prerequisites**
 - Node.js 18+
 - An OpenWeather API key
 - A funded wallet on Tempo Moderato (testnet) or Tempo (mainnet)
 
-### 1. Install dependencies
-
 ```bash
+# 1. Install dependencies
 npm install
 cd oracle-server && npm install && cd ..
-```
 
-### 2. Configure environment
-
-```bash
+# 2. Configure environment
 cp .env.example .env
 ```
 
-Edit `.env` and fill in:
-
 | Variable | Description |
-|----------|-------------|
-| `PRIVATE_KEY` | Deployer wallet private key (no `0x` prefix) |
+|---|---|
+| `PRIVATE_KEY` | Deployer wallet private key (no 0x prefix) |
 | `ORACLE_ADDRESS` | Oracle service wallet address |
 | `PATHUSD_ADDRESS` | pathUSD contract address (testnet) |
 | `USDCE_ADDRESS` | USDC.e contract address (mainnet) |
 | `SCHEDULER_ADDRESS` | Tempo Scheduler precompile address (leave empty to disable) |
-| `ORACLE_FEE_AMOUNT` | MPP fee per settlement, in stablecoin units (default: `"0"`) |
-
-### 3. Compile contracts
+| `ORACLE_FEE_AMOUNT` | MPP fee per settlement, in stablecoin units (default: "0") |
 
 ```bash
+# 3. Compile contracts
 npx hardhat compile
-```
 
-### 4. Run tests
-
-```bash
+# 4. Run tests
 npx hardhat test
-```
 
-### 5. Deploy
-
-**Testnet:**
-```bash
+# 5. Deploy to testnet
 npx hardhat run scripts/deploy.ts --network moderato
-```
 
-**Mainnet:**
-```bash
+# 5. Deploy to mainnet
 npx hardhat run scripts/deploy.ts --network tempo
-```
 
-Deployment records are saved to `deployments/<network>.json`.
-
-### 6. Start the oracle server
-
-```bash
+# 6. Start the oracle server
 cp oracle-server/.env.example oracle-server/.env
-# fill in oracle-server/.env
 cd oracle-server && npm start
-```
 
-The oracle server starts on port `3001` (configurable via `ORACLE_PORT`).
-
-**Health check:**
-```bash
+# Health check
 curl http://localhost:3001/oracle/health
 ```
 
-### 7. Configure n8n
+**n8n Setup**
 
 Set up an n8n workflow to:
 1. Poll `GET /oracle/market/:marketId` after each market's `lockTime`
 2. Call `POST /oracle/settle` with `{ "marketId": N }` when status is `LOCKED`
 
-## Contract Interface (Key Functions)
+## Contract Interface
 
 ```solidity
 // Owner: create a new market
@@ -178,7 +161,7 @@ submitResult(marketId, finalTemp, memo)
 claimWinnings(marketId)
 ```
 
-### Temperature Encoding
+## Temperature Encoding & Bucket System
 
 Temperatures are stored as `int256` with one decimal place precision:
 
@@ -187,31 +170,55 @@ Temperatures are stored as `int256` with one decimal place precision:
 -12 = -1.2°C
 ```
 
-### Bucket System
-
-Markets define temperature ranges as an ascending array of upper bounds. Given `buckets = [25, 28, 31, 34]`, the prediction ranges are:
+Given `buckets = [25, 28, 31, 34]`:
 
 | Bucket | Range |
-|--------|-------|
+|---|---|
 | 0 | ≤ 25°C |
 | 1 | 26°C – 28°C |
 | 2 | 29°C – 31°C |
 | 3 | 32°C – 34°C |
 | 4 | > 34°C |
 
-## Fees
+## Fees & Security
 
-- **Market fee:** 2% of total pool, deducted from winnings
-- **Oracle fee:** configurable via `setOracleFee()`, paid in stablecoin by the oracle on each settlement call
-- **No winner:** if no bets were placed in the winning bucket, all bets are refunded in full (no fee taken)
+**Fees**
+- Market fee: 2% of total pool, deducted from winnings
+- Oracle fee: configurable via `setOracleFee()`, paid in stablecoin per settlement
+- No winner: all bets refunded in full, no fee taken
 
-## Security
-
-- Oracle address is set at deployment and updatable only by the owner
-- Relayer whitelist is managed by the owner
+**Security**
+- Oracle address set at deployment, updatable only by owner
+- Relayer whitelist managed by owner
 - `ReentrancyGuard` on `claimWinnings`
 - All token transfers use OpenZeppelin `SafeERC20`
-- API keys and private keys must be stored in `.env` (never committed)
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Smart contract | Solidity ^0.8.28, OpenZeppelin 5.x |
+| Development | Hardhat 3 + Viem |
+| Oracle server | Node.js + Express + TypeScript |
+| Automation | n8n workflow |
+| Testnet stablecoin | pathUSD (`0x20c000...`) |
+| Mainnet stablecoin | USDC.e (`0x20C000...`) |
+
+## Roadmap
+
+- ✅ P1 — Tempo Moderato testnet setup, dev wallet funded
+- ✅ P2 — Hardhat environment + stablecoin integration (pathUSD testnet / USDC.e mainnet)
+- ✅ P3 — Core contracts deployed: Tempo-native MPP, Payment Memo, Fee Sponsorship, Scheduled Transactions
+- ✅ P4 — Oracle server deployed to VPS (Docker Compose, dual-network switching via `TEMPO_NETWORK` env var)
+- ✅ P5 — Mainnet deployment (`0x072a3a...531f`)
+- ⬜ P6 — End-to-end testnet flow: create market → place bet → oracle settlement → claim winnings
+- ⬜ P7 — First live mainnet market with real USDC.e stakes
+- ⬜ P8 — Multi-city expansion (Taipei / Tokyo / Bangkok), decentralized oracle integration
+
+## Developer
+
+GitHub: [pplmaverick](https://github.com/pplmaverick)
+Wallet: `0xed2B...78F5` — deployed on both Tempo Testnet and Mainnet
 
 ## License
 
