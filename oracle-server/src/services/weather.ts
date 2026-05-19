@@ -1,4 +1,5 @@
 import axios from "axios";
+import { withRetry } from "../utils.js";
 
 const API_KEY = process.env.OPENWEATHER_API_KEY!;
 const BASE = "https://api.openweathermap.org";
@@ -45,17 +46,21 @@ export async function getMaxTemp(city: string, targetDate: Date): Promise<number
 }
 
 async function fetchCurrentTemp(city: string): Promise<number> {
-  const res = await axios.get<OWCurrentResponse>(
-    `${BASE}/data/2.5/weather`,
-    { params: { q: city, appid: API_KEY, units: "metric" } }
+  const res = await withRetry(
+    () => axios.get<OWCurrentResponse>(`${BASE}/data/2.5/weather`, {
+      params: { q: city, appid: API_KEY, units: "metric" },
+    }),
+    `OpenWeather current/${city}`
   );
   return res.data.main.temp;
 }
 
 async function fetchForecastMaxTemp(city: string, targetDate: Date): Promise<number> {
-  const res = await axios.get<{ list: OWForecastItem[] }>(
-    `${BASE}/data/2.5/forecast`,
-    { params: { q: city, appid: API_KEY, units: "metric", cnt: 40 } }
+  const res = await withRetry(
+    () => axios.get<{ list: OWForecastItem[] }>(`${BASE}/data/2.5/forecast`, {
+      params: { q: city, appid: API_KEY, units: "metric", cnt: 40 },
+    }),
+    `OpenWeather forecast/${city}`
   );
 
   const targetDay = targetDate.toISOString().slice(0, 10);

@@ -3,6 +3,7 @@ import {
   createWalletClient,
   http,
 } from "viem";
+import { withRetry } from "../utils.js";
 import { tempo as tempoMainnetChain, tempoModerato as tempoTestnetChain } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import type { MarketData, SettlementReceipt } from "../types.js";
@@ -167,13 +168,16 @@ export async function submitResult(
   // mainnet 的 writeContract 會透過 feeToken chain hook 產生 Tempo 0x76 交易
   // testnet 的 writeContract 用標準 EIP-1559（pathUSD 是 native token）
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const txHash = await (walletClient as any).writeContract({
-    address: activeContractAddress,
-    abi: MARKET_ABI,
-    functionName: "submitResult",
-    args: [BigInt(marketId), BigInt(finalTemp), memo],
-    gas: 3_000_000n, // mainnet submitResult 需要 ~2.35M gas
-  });
+  const txHash = await withRetry<`0x${string}`>(
+    () => (walletClient as any).writeContract({
+      address: activeContractAddress,
+      abi: MARKET_ABI,
+      functionName: "submitResult",
+      args: [BigInt(marketId), BigInt(finalTemp), memo],
+      gas: 3_000_000n, // mainnet submitResult 需要 ~2.35M gas
+    }),
+    `submitResult marketId=${marketId}`
+  );
 
   const txReceipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
   if (txReceipt.status !== "success") {
