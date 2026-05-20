@@ -5,7 +5,7 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.28-purple)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A decentralized weather prediction market built natively on the Tempo blockchain. Every design decision maps to a Tempo protocol primitive — MPP, Payment Memo, Fee Sponsorship, and Scheduled Transactions — making this a purpose-built implementation, not an EVM port.
+Prediction market infrastructure built natively on Tempo Network | Weather as first use case | MPP · Payment Memo · Fee Sponsorship · Scheduled Transactions | pathUSD/USDC settlement
 
 **Deployed on both Testnet and Mainnet.**
 
