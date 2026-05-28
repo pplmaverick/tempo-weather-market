@@ -4,6 +4,14 @@ import { withRetry } from "../utils.js";
 const API_KEY = process.env.OPENWEATHER_API_KEY!;
 const BASE = "https://api.openweathermap.org";
 
+// OpenWeather city ID 對應表（比 q=city_name 更可靠，避免同名城市歧義）
+const CITY_IDS: Record<string, number> = {
+  Taipei: 1668341,
+  Tokyo: 1850147,
+  "New York": 5128581,
+  Seoul: 1835848,
+};
+
 interface OWCurrentResponse {
   main: { temp: number };
   dt: number;
@@ -13,6 +21,13 @@ interface OWCurrentResponse {
 interface OWForecastItem {
   dt: number;
   main: { temp: number; temp_max: number };
+}
+
+function cityParams(city: string): Record<string, string | number> {
+  const id = CITY_IDS[city];
+  return id !== undefined
+    ? { id, appid: API_KEY, units: "metric" }
+    : { q: city, appid: API_KEY, units: "metric" };
 }
 
 // 取得指定城市在 targetDate 的最高氣溫（°C × 10）
@@ -48,7 +63,7 @@ export async function getMaxTemp(city: string, targetDate: Date): Promise<number
 async function fetchCurrentTemp(city: string): Promise<number> {
   const res = await withRetry(
     () => axios.get<OWCurrentResponse>(`${BASE}/data/2.5/weather`, {
-      params: { q: city, appid: API_KEY, units: "metric" },
+      params: cityParams(city),
     }),
     `OpenWeather current/${city}`
   );
@@ -58,7 +73,7 @@ async function fetchCurrentTemp(city: string): Promise<number> {
 async function fetchForecastMaxTemp(city: string, targetDate: Date): Promise<number> {
   const res = await withRetry(
     () => axios.get<{ list: OWForecastItem[] }>(`${BASE}/data/2.5/forecast`, {
-      params: { q: city, appid: API_KEY, units: "metric", cnt: 40 },
+      params: { ...cityParams(city), cnt: 40 },
     }),
     `OpenWeather forecast/${city}`
   );

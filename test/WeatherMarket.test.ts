@@ -761,4 +761,72 @@ describe("WeatherMarket", function () {
       );
     });
   });
+
+  // ── 10. Multi-city createMarket ────────────────────────────────────────────
+
+  describe("multi-city createMarket", function () {
+    // bucket 上界（x10 encoding）：各城市 4 個上界 → 5 個區間
+    const CITY_BUCKETS = {
+      Taipei:     [250n, 280n, 310n, 340n], // ≤25/26-28/29-31/32-34/>34°C
+      Tokyo:      [200n, 250n, 300n, 350n], // ≤20/21-25/26-30/31-35/>35°C
+      "New York": [100n, 150n, 200n, 250n], // ≤10/11-15/16-20/21-25/>25°C
+      Seoul:      [150n, 200n, 250n, 300n], // ≤15/16-20/21-25/26-30/>30°C
+    };
+
+    it("creates Tokyo market with correct city name and buckets", async function () {
+      const { market } = await conn.networkHelpers.loadFixture(baseFixture);
+      const now = BigInt(await conn.networkHelpers.time.latest());
+
+      await market.write.createMarket([
+        "Tokyo", "HIGH_TEMP", now + ONE_DAY * 2n, CITY_BUCKETS.Tokyo, now + ONE_DAY,
+      ]);
+
+      const marketId = ((await market.read.nextMarketId()) as bigint) - 1n;
+      const mkt = (await market.read.getMarket([marketId])) as unknown[];
+      expect(mkt[0]).to.equal("Tokyo");
+      expect(mkt[8] as bigint[]).to.deep.equal(CITY_BUCKETS.Tokyo);
+    });
+
+    it("creates New York market with correct city name and buckets", async function () {
+      const { market } = await conn.networkHelpers.loadFixture(baseFixture);
+      const now = BigInt(await conn.networkHelpers.time.latest());
+
+      await market.write.createMarket([
+        "New York", "HIGH_TEMP", now + ONE_DAY * 2n, CITY_BUCKETS["New York"], now + ONE_DAY,
+      ]);
+
+      const marketId = ((await market.read.nextMarketId()) as bigint) - 1n;
+      const mkt = (await market.read.getMarket([marketId])) as unknown[];
+      expect(mkt[0]).to.equal("New York");
+      expect(mkt[8] as bigint[]).to.deep.equal(CITY_BUCKETS["New York"]);
+    });
+
+    it("creates Seoul market with correct city name and buckets", async function () {
+      const { market } = await conn.networkHelpers.loadFixture(baseFixture);
+      const now = BigInt(await conn.networkHelpers.time.latest());
+
+      await market.write.createMarket([
+        "Seoul", "HIGH_TEMP", now + ONE_DAY * 2n, CITY_BUCKETS.Seoul, now + ONE_DAY,
+      ]);
+
+      const marketId = ((await market.read.nextMarketId()) as bigint) - 1n;
+      const mkt = (await market.read.getMarket([marketId])) as unknown[];
+      expect(mkt[0]).to.equal("Seoul");
+      expect(mkt[8] as bigint[]).to.deep.equal(CITY_BUCKETS.Seoul);
+    });
+
+    it("creates Taipei market with summer high-temp buckets", async function () {
+      const { market } = await conn.networkHelpers.loadFixture(baseFixture);
+      const now = BigInt(await conn.networkHelpers.time.latest());
+
+      await market.write.createMarket([
+        "Taipei", "HIGH_TEMP", now + ONE_DAY * 2n, CITY_BUCKETS.Taipei, now + ONE_DAY,
+      ]);
+
+      const marketId = ((await market.read.nextMarketId()) as bigint) - 1n;
+      const mkt = (await market.read.getMarket([marketId])) as unknown[];
+      expect(mkt[0]).to.equal("Taipei");
+      expect(mkt[8] as bigint[]).to.deep.equal(CITY_BUCKETS.Taipei);
+    });
+  });
 });
