@@ -1,4 +1,5 @@
 import "dotenv/config";
+import cors from "cors";
 import express from "express";
 import { oracleRouter } from "./routes/oracle.js";
 import { networkInfo } from "./services/chain.js";
@@ -28,6 +29,14 @@ if (missing.length > 0) {
 }
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
+
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://frontend-phi-virid-98.vercel.app',
+    /\.vercel\.app$/,
+  ],
+}));
 
 app.use(express.json());
 
