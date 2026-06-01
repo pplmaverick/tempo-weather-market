@@ -89,55 +89,41 @@ bytes32 taskId = IScheduler(scheduler).schedule(
 
 ## Quick Start
 
-**Prerequisites**
+### Prerequisites
 - Node.js 18+
-- An OpenWeather API key
-- A funded wallet on Tempo Moderato (testnet) or Tempo (mainnet)
+- Docker & Docker Compose (for Oracle server)
+- OpenWeather API key ([free tier](https://openweathermap.org/api))
+- Tempo testnet tokens from [faucet](https://faucet.moderato.tempo.xyz/)
+
+### Local Setup
 
 ```bash
-# 1. Install dependencies
+git clone https://github.com/pplmaverick/tempo-weather-market
+cd tempo-weather-market
 npm install
-cd oracle-server && npm install && cd ..
 
-# 2. Configure environment
+# Setup Oracle server
+cd oracle-server
 cp .env.example .env
-```
+# Edit .env: fill in OPENWEATHER_API_KEY and ORACLE_PRIVATE_KEY
+docker compose up -d
 
-| Variable | Description |
-|---|---|
-| `PRIVATE_KEY` | Deployer wallet private key (no 0x prefix) |
-| `ORACLE_ADDRESS` | Oracle service wallet address |
-| `PATHUSD_ADDRESS` | pathUSD contract address (testnet) |
-| `USDCE_ADDRESS` | USDC.e contract address (mainnet) |
-| `SCHEDULER_ADDRESS` | Tempo Scheduler precompile address (leave empty to disable) |
-| `ORACLE_FEE_AMOUNT` | MPP fee per settlement, in stablecoin units (default: "0") |
-
-```bash
-# 3. Compile contracts
-npx hardhat compile
-
-# 4. Run tests
+# Run tests
+cd ..
 npx hardhat test
-
-# 5. Deploy to testnet
-npx hardhat run scripts/deploy.ts --network moderato
-
-# 5. Deploy to mainnet
-npx hardhat run scripts/deploy.ts --network tempo
-
-# 6. Start the oracle server
-cp oracle-server/.env.example oracle-server/.env
-cd oracle-server && npm start
-
-# Health check
-curl http://localhost:3001/oracle/health
 ```
 
-**n8n Setup**
+### Network Configuration
 
-Set up an n8n workflow to:
-1. Poll `GET /oracle/market/:marketId` after each market's `lockTime`
-2. Call `POST /oracle/settle` with `{ "marketId": N }` when status is `LOCKED`
+| Network | Chain ID | RPC | Stablecoin |
+|---------|----------|-----|------------|
+| Testnet (Moderato) | 42431 | `https://rpc.moderato.tempo.xyz` | pathUSD |
+| Mainnet | 4217 | `https://rpc.tempo.xyz` | USDCE |
+
+Switch networks in `oracle-server/.env`:
+```
+TEMPO_NETWORK=testnet   # or mainnet
+```
 
 ## Contract Interface
 
@@ -204,17 +190,17 @@ Bucket boundaries use the same x10 encoding as temperatures. Given `buckets = [2
 | Testnet stablecoin | pathUSD (`0x20c000...`) |
 | Mainnet stablecoin | USDC.e (`0x20C000...`) |
 
-## Roadmap
+### Milestones
 
-- ✅ P1 — Tempo Moderato testnet setup, dev wallet funded
-- ✅ P2 — Hardhat environment + stablecoin integration (pathUSD testnet / USDC.e mainnet)
-- ✅ P3 — Core contracts deployed: Tempo-native MPP, Payment Memo, Fee Sponsorship, Scheduled Transactions
-- ✅ P4 — Oracle server deployed to VPS (Docker Compose, dual-network switching via `TEMPO_NETWORK` env var)
-- ✅ P5 — Mainnet deployment (`0x072a3a...531f`)
-- ✅ P6 — 44/44 tests passing (deployment / createMarket / placeBet / lockMarket / submitResult+MPP / claimWinnings / Fee Sponsorship / Gas Tank / admin)
-- ✅ P7 — End-to-end testnet flow: create market → place bet → oracle settlement → claim winnings
-- ✅ P8 — First batch improvements: oracle retry logic, frontend, Oracle server Dockerized, multi-city support (Tokyo / New York / Seoul)
-- ⬜ P9 — Second batch: multi-source weather median (OpenWeather + WeatherAPI), structured settlement log, TypeScript SDK (`createMarket`, `placeBet` wrappers)
+| Milestone | Description | Status |
+|-----------|-------------|--------|
+| M1 | Deploy to testnet + mainnet, Oracle server on VPS, 40/40 tests | ✅ Complete |
+| M2 | Oracle retry logic (3 attempts, 2s delay) | ✅ Complete |
+| M3 | Multi-city support: Taipei, Tokyo, New York, Seoul | ✅ Complete |
+| M4 | Developer docs: .env.example with inline comments, README setup guide | ✅ Complete |
+| M5 | React frontend on Vercel | 🔄 In Progress |
+| M6 | Multi-source weather median | 📋 Planned |
+| M7 | TypeScript SDK | 📋 Planned |
 
 ## Developer
 
