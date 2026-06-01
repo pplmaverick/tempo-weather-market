@@ -13,9 +13,39 @@ const CITY_IDS: Record<string, number> = {
 };
 
 interface OWCurrentResponse {
-  main: { temp: number };
+  main: { temp: number; humidity: number };
+  wind: { speed: number };
+  weather: { description: string }[];
+  rain?: { "1h"?: number };
   dt: number;
   name: string;
+}
+
+export interface CurrentWeatherData {
+  city: string;
+  temperature: number;   // °C (not x10)
+  humidity: number;      // %
+  description: string;
+  windSpeed: number;     // km/h
+  precipitation: number; // mm/h (0 if none)
+}
+
+export async function getCurrentWeather(city: string): Promise<CurrentWeatherData> {
+  const res = await withRetry(
+    () => axios.get<OWCurrentResponse>(`${BASE}/data/2.5/weather`, {
+      params: cityParams(city),
+    }),
+    `OpenWeather current/${city}`
+  );
+  const d = res.data;
+  return {
+    city,
+    temperature: Math.round(d.main.temp * 10) / 10,
+    humidity: d.main.humidity,
+    description: d.weather[0]?.description ?? "",
+    windSpeed: Math.round(d.wind.speed * 3.6 * 10) / 10, // m/s → km/h
+    precipitation: d.rain?.["1h"] ?? 0,
+  };
 }
 
 interface OWForecastItem {

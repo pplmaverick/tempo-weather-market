@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { getMarket, getOracleFee, submitResult, verifyPathUSDTransfer, account, networkInfo } from "../services/chain.js";
-import { getMaxTemp } from "../services/weather.js";
+import { getMaxTemp, getCurrentWeather } from "../services/weather.js";
 import { buildChallenge, verifyNonce, isTxUsed, markTxUsed } from "../services/payment.js";
 
 export const oracleRouter = Router();
@@ -142,6 +142,19 @@ oracleRouter.get("/market/:marketId", async (req: Request, res: Response) => {
     });
   } catch (err) {
     return res.status(400).json({ error: String(err) });
+  }
+});
+
+// ─── GET /oracle/weather/:city ────────────────────────────────────────────────
+// 回傳城市即時天氣（供前端 WeatherStrip 使用）
+
+oracleRouter.get("/weather/:city", async (req: Request, res: Response) => {
+  const city = req.params.city;
+  try {
+    const data = await getCurrentWeather(city);
+    return res.json(data);
+  } catch (err) {
+    return res.status(502).json({ error: "無法取得天氣資料", detail: String(err) });
   }
 });
 

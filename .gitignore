@@ -12,3 +12,4 @@ node_modules/
 
 # Hardhat Ignition 部署記錄（含敏感地址資訊，視需求決定是否提交）
 ignition/deployments/
+frontend/.env
