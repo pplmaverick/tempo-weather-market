@@ -21,10 +21,11 @@ function useOracleHealth() {
 }
 
 export default function WeatherStrip({ oracleCity, cityName }: Props) {
-  const { data: healthData, error: healthError } = useOracleHealth()
+  const { error: healthError } = useOracleHealth()
   const { data, isLoading, error: weatherError } = useWeather(oracleCity)
 
-  const oracleOnline = !healthError && healthData?.status === 'ok'
+  // 只在確認失敗時顯示 OFFLINE；載入中（healthError=null）和成功都顯示 LIVE
+  const oracleOnline = !healthError
 
   return (
     <div style={{
