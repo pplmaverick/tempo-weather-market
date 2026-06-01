@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;html class="light" lang="en"&gt;&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="utf-8"/&gt;</p>
+<p class="p1">&lt;meta content="width=device-width, initial-scale=1.0" name="viewport"/&gt;</p>
+<p class="p1">&lt;title&gt;Market Status | Tempo Weather Market&lt;/title&gt;</p>
+<p class="p1">&lt;script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;amp;family=JetBrains+Mono:wght@400;500&amp;amp;display=swap" rel="stylesheet"/&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;amp;display=swap" rel="stylesheet"/&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;amp;display=swap" rel="stylesheet"/&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Hanken Grotesk', sans-serif; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.material-symbols-outlined {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.trading-grid {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>grid-template-columns: repeat(12, 1fr);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>gap: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;script id="tailwind-config"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>tailwind.config = {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>darkMode: "class",</p>
+<p class="p1"><span class="Apple-converted-space">          </span>theme: {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>extend: {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>"colors": {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-tertiary-fixed": "#301400",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"tertiary-container": "#b65c00",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-secondary-fixed": "#141b2b",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-surface-variant": "#464555",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"outline": "#777587",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"tertiary-fixed-dim": "#ffb785",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"tertiary": "#914800",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-secondary": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-container-lowest": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-surface": "#191c1d",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"primary-container": "#675df9",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-bright": "#f8f9fa",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"secondary-fixed": "#dce2f7",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"outline-variant": "#c7c4d8",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"inverse-on-surface": "#f0f1f2",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-tertiary-fixed-variant": "#713700",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface": "#f8f9fa",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"inverse-primary": "#c4c0ff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"tertiary-fixed": "#ffdcc6",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-container-low": "#f3f4f5",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-tint": "#4f44e2",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-primary-container": "#fffbff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-variant": "#e1e3e4",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"secondary-container": "#d9dff5",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-primary": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-tertiary": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-tertiary-container": "#fffbff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-primary-fixed-variant": "#3622ca",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-secondary-fixed-variant": "#404758",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-container-highest": "#e1e3e4",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-primary-fixed": "#100069",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"error": "#ba1a1a",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-error": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"secondary": "#575e70",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-error-container": "#93000a",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"background": "#f8f9fa",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"primary-fixed": "#e3dfff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-container-high": "#e7e8e9",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"primary": "#4d41df",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"primary-fixed-dim": "#c4c0ff",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-secondary-container": "#5c6274",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"error-container": "#ffdad6",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"inverse-surface": "#2e3132",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"secondary-fixed-dim": "#c0c6db",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-container": "#edeeef",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"surface-dim": "#d9dadb",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"on-background": "#191c1d"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>},</p>
+<p class="p1"><span class="Apple-converted-space">              </span>"borderRadius": {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"DEFAULT": "0.25rem",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"lg": "0.5rem",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"xl": "0.75rem",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"full": "9999px"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>},</p>
+<p class="p1"><span class="Apple-converted-space">              </span>"spacing": {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"xl": "40px",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"gutter": "20px",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"xs": "4px",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"md": "16px",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"sm": "8px",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"base": "4px",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"lg": "24px",</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"container-max": "1280px"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>},</p>
+<p class="p1"><span class="Apple-converted-space">              </span>"fontFamily": {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"headline-md": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"body-lg": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"body-md": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"display": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"headline-lg": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"label-md": ["JetBrains Mono"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"label-sm": ["JetBrains Mono"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"body-sm": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"headline-lg-mobile": ["Hanken Grotesk"]</p>
+<p class="p1"><span class="Apple-converted-space">              </span>},</p>
+<p class="p1"><span class="Apple-converted-space">              </span>"fontSize": {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"label-md": ["14px", {"lineHeight": "16px", "fontWeight": "500"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"label-sm": ["12px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>"headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container"&gt;</p>
+<p class="p1">&lt;!-- TopNavBar --&gt;</p>
+<p class="p1">&lt;header class="bg-surface docked full-width top-0 border-b border-outline-variant z-50 sticky"&gt;</p>
+<p class="p1">&lt;div class="flex justify-between items-center w-full px-lg max-w-container-max mx-auto h-16"&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md"&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-headline-md font-bold text-primary"&gt;Tempo Weather Market&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;nav class="hidden md:flex items-center gap-lg h-full"&gt;</p>
+<p class="p1">&lt;a class="text-secondary hover:bg-surface-container-low transition-colors px-sm py-xs h-full flex items-center" href="#"&gt;Markets&lt;/a&gt;</p>
+<p class="p1">&lt;a class="text-secondary hover:bg-surface-container-low transition-colors px-sm py-xs h-full flex items-center" href="#"&gt;My Bets&lt;/a&gt;</p>
+<p class="p1">&lt;a class="text-primary border-b-2 border-primary pb-1 h-full flex items-center font-bold" href="#"&gt;Market Status&lt;/a&gt;</p>
+<p class="p1">&lt;/nav&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md"&gt;</p>
+<p class="p1">&lt;div class="hidden sm:flex items-center px-sm py-xs bg-surface-container rounded-lg border border-outline-variant"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant px-2 border-r border-outline-variant mr-2"&gt;Mainnet&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-primary font-bold"&gt;Connected&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;button class="bg-primary text-on-primary font-body-md text-body-md px-lg py-sm rounded-lg hover:opacity-90 active:scale-95 duration-100 transition-all"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Connect Wallet</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/header&gt;</p>
+<p class="p1">&lt;main class="max-w-container-max mx-auto px-lg py-xl min-h-screen"&gt;</p>
+<p class="p1">&lt;!-- Header Section --&gt;</p>
+<p class="p1">&lt;div class="mb-xl"&gt;</p>
+<p class="p1">&lt;h1 class="font-display text-display mb-sm"&gt;Market Registry&lt;/h1&gt;</p>
+<p class="p1">&lt;p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Explore the settlement history and operational status of all weather prediction markets powered by Tempo's decentralized oracle network.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;!-- Filter Bar --&gt;</p>
+<p class="p1">&lt;div class="flex flex-wrap items-center justify-between gap-md mb-lg p-md bg-surface-container-low rounded-xl border border-outline-variant"&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-sm"&gt;</p>
+<p class="p1">&lt;button class="bg-white text-primary px-lg py-sm rounded-lg border border-outline-variant shadow-sm font-body-md"&gt;All Markets&lt;/button&gt;</p>
+<p class="p1">&lt;button class="text-secondary px-lg py-sm rounded-lg hover:bg-surface-container transition-colors font-body-md"&gt;Settled&lt;/button&gt;</p>
+<p class="p1">&lt;button class="text-secondary px-lg py-sm rounded-lg hover:bg-surface-container transition-colors font-body-md"&gt;Locked&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="relative w-full md:w-80"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"&gt;search&lt;/span&gt;</p>
+<p class="p1">&lt;input class="w-full bg-white border-outline-variant rounded-lg pl-10 py-sm font-label-md focus:ring-primary focus:border-primary" placeholder="Search Market ID or City..." type="text"/&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;!-- Main Marketplace Terminal Layout --&gt;</p>
+<p class="p1">&lt;div class="trading-grid"&gt;</p>
+<p class="p1">&lt;!-- Market Details Feed (Main Content) --&gt;</p>
+<p class="p1">&lt;div class="col-span-12 lg:col-span-9 space-y-md"&gt;</p>
+<p class="p1">&lt;!-- Settled Market Card --&gt;</p>
+<p class="p1">&lt;article class="bg-white border border-outline-variant rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors group"&gt;</p>
+<p class="p1">&lt;div class="p-lg"&gt;</p>
+<p class="p1">&lt;div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-lg"&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-sm mb-xs"&gt;</p>
+<p class="p1">&lt;span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider"&gt;#TW-TPE-241025&lt;/span&gt;</p>
+<p class="p1">&lt;span class="bg-primary-container/10 text-primary-container px-sm py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-primary-container/20"&gt;SETTLED&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;h2 class="font-headline-lg text-headline-lg"&gt;Taipei, Taiwan&lt;/h2&gt;</p>
+<p class="p1">&lt;p class="text-on-surface-variant font-body-sm"&gt;Settlement Date: Oct 25, 2024&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="text-right"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant block mb-1 uppercase"&gt;Total Pool&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-headline-md"&gt;142,500 USDC&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="grid grid-cols-1 md:grid-cols-2 gap-lg p-md bg-surface-container-lowest rounded-lg border border-outline-variant"&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant uppercase"&gt;Settlement Result&lt;/span&gt;</p>
+<p class="p1">&lt;div class="flex items-baseline gap-sm mt-sm"&gt;</p>
+<p class="p1">&lt;span class="text-[40px] font-bold leading-none"&gt;30.2°C&lt;/span&gt;</p>
+<p class="p1">&lt;span class="text-primary font-bold font-body-md"&gt;Winning Range: 28-31°C&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm block"&gt;Pool Distribution&lt;/span&gt;</p>
+<p class="p1">&lt;div class="flex h-6 w-full rounded-full overflow-hidden bg-surface-container"&gt;</p>
+<p class="p1">&lt;div class="h-full bg-outline-variant" style="width: 15%" title="&amp;lt;25°C: 15%"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="h-full bg-outline" style="width: 10%" title="25-28°C: 10%"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="h-full bg-primary" style="width: 45%" title="28-31°C: 45%"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="h-full bg-secondary" style="width: 20%" title="31-34°C: 20%"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="h-full bg-tertiary-container" style="width: 10%" title="&amp;gt;34°C: 10%"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex justify-between mt-2"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-[10px] text-on-surface-variant"&gt;Range 1-5&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-[10px] text-primary font-bold"&gt;45% Wins&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/article&gt;</p>
+<p class="p1">&lt;!-- Locked Market Card --&gt;</p>
+<p class="p1">&lt;article class="bg-white border border-outline-variant rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors group"&gt;</p>
+<p class="p1">&lt;div class="p-lg"&gt;</p>
+<p class="p1">&lt;div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-lg"&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-sm mb-xs"&gt;</p>
+<p class="p1">&lt;span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider"&gt;#TW-LON-241102&lt;/span&gt;</p>
+<p class="p1">&lt;span class="bg-tertiary-container/10 text-tertiary-container px-sm py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-tertiary-container/20"&gt;LOCKED&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;h2 class="font-headline-lg text-headline-lg"&gt;London, UK&lt;/h2&gt;</p>
+<p class="p1">&lt;p class="text-on-surface-variant font-body-sm"&gt;Target Date: Nov 02, 2024 (Awaiting Oracle)&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="text-right"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant block mb-1 uppercase"&gt;Total Pool&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-headline-md"&gt;88,240 USDC&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex flex-col md:flex-row gap-lg"&gt;</p>
+<p class="p1">&lt;div class="flex-1 space-y-md"&gt;</p>
+<p class="p1">&lt;div class="flex justify-between items-center border-b border-outline-variant pb-2"&gt;</p>
+<p class="p1">&lt;span class="font-body-md"&gt;Range: &amp;lt; 8°C&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-label-md"&gt;12,400 USDC (14%)&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex justify-between items-center border-b border-outline-variant pb-2"&gt;</p>
+<p class="p1">&lt;span class="font-body-md"&gt;Range: 8-11°C&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-label-md"&gt;34,100 USDC (39%)&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex justify-between items-center border-b border-outline-variant pb-2"&gt;</p>
+<p class="p1">&lt;span class="font-body-md"&gt;Range: 11-14°C&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-label-md"&gt;28,500 USDC (32%)&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="w-full md:w-1/3 bg-surface-container-lowest p-md rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-outline mb-2 animate-pulse" style="font-size: 32px;"&gt;hourglass_empty&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-body-sm text-on-surface-variant text-center"&gt;Awaiting final temperature verification from oracle nodes.&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/article&gt;</p>
+<p class="p1">&lt;!-- Settled Market Card 2 --&gt;</p>
+<p class="p1">&lt;article class="bg-white border border-outline-variant rounded-xl overflow-hidden hover:bg-surface-container-low transition-colors group"&gt;</p>
+<p class="p1">&lt;div class="p-lg"&gt;</p>
+<p class="p1">&lt;div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-lg"&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-sm mb-xs"&gt;</p>
+<p class="p1">&lt;span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider"&gt;#TW-NYC-241018&lt;/span&gt;</p>
+<p class="p1">&lt;span class="bg-primary-container/10 text-primary-container px-sm py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-primary-container/20"&gt;SETTLED&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;h2 class="font-headline-lg text-headline-lg"&gt;New York, USA&lt;/h2&gt;</p>
+<p class="p1">&lt;p class="text-on-surface-variant font-body-sm"&gt;Settlement Date: Oct 18, 2024&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="text-right"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant block mb-1 uppercase"&gt;Total Pool&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-headline-md"&gt;210,000 USDC&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="grid grid-cols-1 md:grid-cols-2 gap-lg p-md bg-surface-container-lowest rounded-lg border border-outline-variant"&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant uppercase"&gt;Settlement Result&lt;/span&gt;</p>
+<p class="p1">&lt;div class="flex items-baseline gap-sm mt-sm"&gt;</p>
+<p class="p1">&lt;span class="text-[40px] font-bold leading-none"&gt;14.8°C&lt;/span&gt;</p>
+<p class="p1">&lt;span class="text-primary font-bold font-body-md"&gt;Winning Range: 14-17°C&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex items-center justify-center"&gt;</p>
+<p class="p1">&lt;button class="text-primary font-body-md border border-primary px-lg py-sm rounded-lg hover:bg-primary-container/5 transition-colors"&gt;View Claim Details&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/article&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;!-- Sidebar (Oracle &amp; Metadata) --&gt;</p>
+<p class="p1">&lt;aside class="col-span-12 lg:col-span-3 space-y-lg"&gt;</p>
+<p class="p1">&lt;section class="bg-white border border-outline-variant rounded-xl p-lg sticky top-24"&gt;</p>
+<p class="p1">&lt;h3 class="font-headline-md text-headline-md mb-md flex items-center gap-sm"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-primary"&gt;verified_user&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>Oracle Security</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/h3&gt;</p>
+<p class="p1">&lt;div class="space-y-lg"&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-xs block"&gt;Contract Address&lt;/span&gt;</p>
+<p class="p1">&lt;div class="bg-surface-container-low p-sm rounded border border-outline-variant group flex items-center justify-between"&gt;</p>
+<p class="p1">&lt;code class="font-label-md text-xs truncate"&gt;0x742d...44e&lt;/code&gt;</p>
+<p class="p1">&lt;button class="material-symbols-outlined text-body-sm text-outline hover:text-primary transition-colors"&gt;content_copy&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-xs block"&gt;Primary Data Feed&lt;/span&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md p-sm bg-white border border-outline-variant rounded"&gt;</p>
+<p class="p1">&lt;div class="w-10 h-10 bg-primary-container/10 rounded-lg flex items-center justify-center"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-primary"&gt;cloud&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div&gt;</p>
+<p class="p1">&lt;p class="font-body-md font-bold"&gt;OpenWeather&lt;/p&gt;</p>
+<p class="p1">&lt;p class="font-label-sm text-[10px] text-on-surface-variant uppercase"&gt;Via Chainlink DON&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="pt-md border-t border-outline-variant"&gt;</p>
+<p class="p1">&lt;h4 class="font-body-sm font-bold text-on-surface-variant mb-sm uppercase"&gt;Recent Events&lt;/h4&gt;</p>
+<p class="p1">&lt;ul class="space-y-sm"&gt;</p>
+<p class="p1">&lt;li class="flex gap-sm"&gt;</p>
+<p class="p1">&lt;span class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0"&gt;&lt;/span&gt;</p>
+<p class="p1">&lt;p class="text-[13px] leading-tight"&gt;#TW-TPE-241025 was successfully settled by 21/21 nodes.&lt;/p&gt;</p>
+<p class="p1">&lt;/li&gt;</p>
+<p class="p1">&lt;li class="flex gap-sm"&gt;</p>
+<p class="p1">&lt;span class="w-1.5 h-1.5 rounded-full bg-tertiary-container mt-1.5 shrink-0"&gt;&lt;/span&gt;</p>
+<p class="p1">&lt;p class="text-[13px] leading-tight"&gt;#TW-LON-241102 transitioned to LOCKED state.&lt;/p&gt;</p>
+<p class="p1">&lt;/li&gt;</p>
+<p class="p1">&lt;/ul&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="p-md bg-primary-container rounded-lg text-on-primary-container"&gt;</p>
+<p class="p1">&lt;p class="font-label-sm mb-xs uppercase opacity-80"&gt;Documentation&lt;/p&gt;</p>
+<p class="p1">&lt;p class="font-body-sm mb-md"&gt;Learn how our settlement logic and weather oracles work.&lt;/p&gt;</p>
+<p class="p1">&lt;a class="font-label-md underline hover:no-underline" href="#"&gt;Read Whitepaper →&lt;/a&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p1">&lt;!-- Weather Visual Card (Decorative but Functional) --&gt;</p>
+<p class="p1">&lt;div class="bg-gradient-to-br from-primary to-primary-container rounded-xl p-lg text-white shadow-lg overflow-hidden relative"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined absolute -bottom-6 -right-6 text-[120px] opacity-10 rotate-12"&gt;thermostat&lt;/span&gt;</p>
+<p class="p1">&lt;div class="relative z-10"&gt;</p>
+<p class="p1">&lt;h4 class="font-headline-md mb-1"&gt;Market Integrity&lt;/h4&gt;</p>
+<p class="p1">&lt;p class="font-body-sm opacity-90 leading-relaxed mb-lg"&gt;Tempo uses cryptographically secure proof-of-weather to ensure every settlement is 100% transparent and tamper-proof.&lt;/p&gt;</p>
+<p class="p1">&lt;div class="flex gap-sm"&gt;</p>
+<p class="p1">&lt;span class="px-2 py-1 rounded-md bg-white/20 font-label-sm"&gt;256-bit Proofs&lt;/span&gt;</p>
+<p class="p1">&lt;span class="px-2 py-1 rounded-md bg-white/20 font-label-sm"&gt;High Res&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/aside&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;!-- Pagination --&gt;</p>
+<p class="p1">&lt;div class="mt-xl flex justify-center items-center gap-sm"&gt;</p>
+<p class="p1">&lt;button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined"&gt;chevron_left&lt;/span&gt;</p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p1">&lt;button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold"&gt;1&lt;/button&gt;</p>
+<p class="p1">&lt;button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors"&gt;2&lt;/button&gt;</p>
+<p class="p1">&lt;button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors"&gt;3&lt;/button&gt;</p>
+<p class="p1">&lt;span class="text-on-surface-variant"&gt;...&lt;/span&gt;</p>
+<p class="p1">&lt;button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors"&gt;12&lt;/button&gt;</p>
+<p class="p1">&lt;button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined"&gt;chevron_right&lt;/span&gt;</p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/main&gt;</p>
+<p class="p1">&lt;!-- Footer --&gt;</p>
+<p class="p1">&lt;footer class="bg-surface-container-low border-t border-outline-variant mt-24"&gt;</p>
+<p class="p1">&lt;div class="w-full py-lg px-lg max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md"&gt;</p>
+<p class="p1">&lt;div class="flex flex-col md:flex-row items-center gap-md"&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-headline-md font-bold text-on-surface"&gt;Tempo&lt;/span&gt;</p>
+<p class="p1">&lt;p class="font-body-sm text-body-sm text-on-surface-variant"&gt;© 2024 Tempo Weather Market. Powered by Tempo Network.&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex flex-wrap justify-center gap-lg"&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Documentation&lt;/a&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Weather Data Sources&lt;/a&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Privacy Policy&lt;/a&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Terms of Service&lt;/a&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/footer&gt;</p>
+<p class="p1">&lt;!-- FAB (Suppressed as per rules for Details/Status pages, but for main browsing it can be useful - hiding here to stick strictly to relevance check) --&gt;</p>
+<p class="p1">&lt;/body&gt;&lt;/html&gt;</p>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;html class="light" lang="en"&gt;&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="utf-8"/&gt;</p>
+<p class="p1">&lt;meta content="width=device-width, initial-scale=1.0" name="viewport"/&gt;</p>
+<p class="p1">&lt;script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;amp;family=JetBrains+Mono:wght@500&amp;amp;display=swap" rel="stylesheet"/&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;amp;display=swap" rel="stylesheet"/&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;amp;display=swap" rel="stylesheet"/&gt;</p>
+<p class="p1">&lt;script id="tailwind-config"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>tailwind.config = {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>darkMode: "class",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>theme: {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>extend: {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"colors": {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-tertiary-fixed": "#301400",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"tertiary-container": "#b65c00",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-secondary-fixed": "#141b2b",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-surface-variant": "#464555",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"outline": "#777587",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"tertiary-fixed-dim": "#ffb785",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"tertiary": "#914800",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-secondary": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-container-lowest": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-surface": "#191c1d",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"primary-container": "#675df9",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-bright": "#f8f9fa",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"secondary-fixed": "#dce2f7",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"outline-variant": "#c7c4d8",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"inverse-on-surface": "#f0f1f2",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-tertiary-fixed-variant": "#713700",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface": "#f8f9fa",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"inverse-primary": "#c4c0ff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"tertiary-fixed": "#ffdcc6",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-container-low": "#f3f4f5",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-tint": "#4f44e2",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-primary-container": "#fffbff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-variant": "#e1e3e4",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"secondary-container": "#d9dff5",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-primary": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-tertiary": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-tertiary-container": "#fffbff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-primary-fixed-variant": "#3622ca",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-secondary-fixed-variant": "#404758",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-container-highest": "#e1e3e4",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-primary-fixed": "#100069",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"error": "#ba1a1a",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-error": "#ffffff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"secondary": "#575e70",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-error-container": "#93000a",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"background": "#f8f9fa",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"primary-fixed": "#e3dfff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-container-high": "#e7e8e9",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"primary": "#4d41df",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"primary-fixed-dim": "#c4c0ff",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-secondary-container": "#5c6274",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"error-container": "#ffdad6",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"inverse-surface": "#2e3132",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"secondary-fixed-dim": "#c0c6db",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-container": "#edeeef",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"surface-dim": "#d9dadb",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"on-background": "#191c1d"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"borderRadius": {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"DEFAULT": "0.25rem",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"lg": "0.5rem",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"xl": "0.75rem",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"full": "9999px"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"spacing": {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"xl": "40px",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"gutter": "20px",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"xs": "4px",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"md": "16px",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"sm": "8px",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"base": "4px",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"lg": "24px",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"container-max": "1280px"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"fontFamily": {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"headline-md": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"body-lg": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"body-md": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"display": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"headline-lg": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"label-md": ["JetBrains Mono"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"label-sm": ["JetBrains Mono"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"body-sm": ["Hanken Grotesk"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"headline-lg-mobile": ["Hanken Grotesk"]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>"fontSize": {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"label-md": ["14px", {"lineHeight": "16px", "fontWeight": "500"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"label-sm": ["12px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Hanken Grotesk', sans-serif; background-color: #f8f9fa; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.thin-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.thin-scrollbar::-webkit-scrollbar-track { background: transparent; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.thin-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="bg-background text-on-background min-h-screen flex flex-col"&gt;</p>
+<p class="p1">&lt;!-- Top Navigation Bar --&gt;</p>
+<p class="p1">&lt;header class="bg-surface sticky top-0 z-50 border-b border-outline-variant"&gt;</p>
+<p class="p1">&lt;div class="flex justify-between items-center w-full px-lg max-w-container-max mx-auto h-16"&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-xl"&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-headline-md font-bold text-primary"&gt;Tempo Weather Market&lt;/span&gt;</p>
+<p class="p1">&lt;nav class="hidden md:flex items-center gap-lg h-full"&gt;</p>
+<p class="p1">&lt;a class="text-secondary hover:bg-surface-container-low transition-colors px-md py-sm rounded-lg font-body-md text-body-md" href="#"&gt;Markets&lt;/a&gt;</p>
+<p class="p1">&lt;a class="text-primary border-b-2 border-primary pb-1 font-body-md text-body-md" href="#"&gt;My Bets&lt;/a&gt;</p>
+<p class="p1">&lt;a class="text-secondary hover:bg-surface-container-low transition-colors px-md py-sm rounded-lg font-body-md text-body-md" href="#"&gt;Market Status&lt;/a&gt;</p>
+<p class="p1">&lt;/nav&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md"&gt;</p>
+<p class="p1">&lt;button class="hidden sm:block text-secondary font-label-md text-label-md px-md py-base border border-outline-variant rounded-lg hover:bg-surface-container-low transition-all"&gt;Mainnet&lt;/button&gt;</p>
+<p class="p1">&lt;button class="bg-primary text-on-primary font-label-md text-label-md px-lg py-sm rounded-lg hover:shadow-lg active:scale-95 duration-100 transition-all"&gt;Connect Wallet&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/header&gt;</p>
+<p class="p1">&lt;main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl"&gt;</p>
+<p class="p1">&lt;!-- Header Section --&gt;</p>
+<p class="p1">&lt;div class="mb-xl"&gt;</p>
+<p class="p1">&lt;h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs"&gt;My Predictions&lt;/h1&gt;</p>
+<p class="p1">&lt;p class="font-body-md text-body-md text-on-surface-variant"&gt;Manage your active climate positions and review historical performance.&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;!-- Portfolio Overview Bento Grid --&gt;</p>
+<p class="p1">&lt;div class="grid grid-cols-1 md:grid-cols-3 gap-lg mb-xl"&gt;</p>
+<p class="p1">&lt;div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg"&gt;</p>
+<p class="p1">&lt;div class="flex items-center justify-between mb-sm"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant"&gt;ACTIVE STAKE&lt;/span&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet"&gt;account_balance_wallet&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="font-headline-lg text-headline-lg text-on-surface"&gt;350.00 &lt;span class="font-label-md text-label-md text-on-surface-variant"&gt;USDCE&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="mt-sm font-label-sm text-label-sm text-primary flex items-center gap-xs"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-sm" data-icon="trending_up"&gt;trending_up&lt;/span&gt;</p>
+<p class="p1">&lt;span&gt;2 active markets&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg"&gt;</p>
+<p class="p1">&lt;div class="flex items-center justify-between mb-sm"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant"&gt;TOTAL PROFIT&lt;/span&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-tertiary" data-icon="monetization_on"&gt;monetization_on&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="font-headline-lg text-headline-lg text-on-surface"&gt;+125.40 &lt;span class="font-label-md text-label-md text-on-surface-variant"&gt;USDCE&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="mt-sm font-label-sm text-label-sm text-tertiary flex items-center gap-xs"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-sm" data-icon="auto_graph"&gt;auto_graph&lt;/span&gt;</p>
+<p class="p1">&lt;span&gt;+15.2% Avg ROI&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg"&gt;</p>
+<p class="p1">&lt;div class="flex items-center justify-between mb-sm"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant"&gt;WIN RATE&lt;/span&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-on-secondary-fixed-variant" data-icon="military_tech"&gt;military_tech&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="font-headline-lg text-headline-lg text-on-surface"&gt;68.5%&lt;/div&gt;</p>
+<p class="p1">&lt;div class="mt-sm w-full bg-surface-container-low h-1.5 rounded-full overflow-hidden"&gt;</p>
+<p class="p1">&lt;div class="bg-primary h-full w-[68.5%]"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;!-- Filters and List Layout --&gt;</p>
+<p class="p1">&lt;div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm"&gt;</p>
+<p class="p1">&lt;div class="p-lg border-b border-outline-variant flex flex-col sm:flex-row justify-between items-start sm:items-center gap-md bg-surface-container-low"&gt;</p>
+<p class="p1">&lt;div class="flex gap-sm"&gt;</p>
+<p class="p1">&lt;button class="bg-white px-md py-sm rounded-lg border border-outline-variant shadow-sm font-label-md text-label-md text-primary"&gt;All Predictions&lt;/button&gt;</p>
+<p class="p1">&lt;button class="px-md py-sm rounded-lg hover:bg-surface-variant transition-colors font-label-md text-label-md text-on-surface-variant"&gt;Active&lt;/button&gt;</p>
+<p class="p1">&lt;button class="px-md py-sm rounded-lg hover:bg-surface-variant transition-colors font-label-md text-label-md text-on-surface-variant"&gt;History&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-sm bg-white border border-outline-variant rounded-lg px-sm py-xs w-full sm:w-auto"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-outline" data-icon="search"&gt;search&lt;/span&gt;</p>
+<p class="p1">&lt;input class="border-none bg-transparent focus:ring-0 font-body-sm text-body-sm w-full" placeholder="Search city..." type="text"/&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="overflow-x-auto thin-scrollbar"&gt;</p>
+<p class="p1">&lt;table class="w-full text-left border-collapse"&gt;</p>
+<p class="p1">&lt;thead&gt;</p>
+<p class="p1">&lt;tr class="bg-surface-container-lowest border-b border-outline-variant"&gt;</p>
+<p class="p1">&lt;th class="px-lg py-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"&gt;City&lt;/th&gt;</p>
+<p class="p1">&lt;th class="px-lg py-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"&gt;Target Date&lt;/th&gt;</p>
+<p class="p1">&lt;th class="px-lg py-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"&gt;Range Bet On&lt;/th&gt;</p>
+<p class="p1">&lt;th class="px-lg py-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right"&gt;Stake&lt;/th&gt;</p>
+<p class="p1">&lt;th class="px-lg py-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"&gt;Status&lt;/th&gt;</p>
+<p class="p1">&lt;th class="px-lg py-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right"&gt;Result / Action&lt;/th&gt;</p>
+<p class="p1">&lt;/tr&gt;</p>
+<p class="p1">&lt;/thead&gt;</p>
+<p class="p1">&lt;tbody class="divide-y divide-outline-variant font-body-md text-body-md"&gt;</p>
+<p class="p1">&lt;!-- Row 1: Active/Open --&gt;</p>
+<p class="p1">&lt;tr class="hover:bg-surface-container-low transition-colors group"&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md"&gt;</p>
+<p class="p1">&lt;div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden"&gt;</p>
+<p class="p1">&lt;img alt="Taipei" class="w-full h-full object-cover" data-alt="A cinematic, aerial long shot of the Taipei 101 skyscraper reaching into a soft, hazy blue sky at dawn. The lighting is ethereal and cool-toned, echoing a clinical fintech aesthetic. The urban landscape below is sharp and detailed, conveying a sense of authoritative data and precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxEn51kxj4hO4lovlN6AcRNC3Pz8eGmH7WtayTIuDlO9tBP3LMmmgU3QWGec0cqFUD-F926Li55Iau8HY4nWSbIGgzrAmY80PFi5qDdpBZ12ElGrSSsnhgqbLNaNTKVDIwArkiZRudRwPTYMnnYofrpI8jSe4RE-xjlJrAcrsxa0lD8417LWFjdKOWp09cnToa7JQdiaWvg5B8-cbZUgUJoqOxOdbXWmlvpZU_l7gf55AgQXCT_an2teMWPqF3R0L7E1m2S-wYVXA"/&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-on-surface"&gt;Taipei&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-on-surface-variant font-label-md"&gt;Oct 25, 2024&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="bg-surface-container-high px-sm py-1 rounded-md font-label-md text-on-surface"&gt;28-31°C&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right font-label-md text-on-surface"&gt;100.00 USDCE&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-container/10 text-primary uppercase"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>OPEN</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right"&gt;</p>
+<p class="p1">&lt;span class="text-primary font-medium"&gt;Active&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;/tr&gt;</p>
+<p class="p1">&lt;!-- Row 2: Settled/Win --&gt;</p>
+<p class="p1">&lt;tr class="hover:bg-surface-container-low transition-colors group"&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md"&gt;</p>
+<p class="p1">&lt;div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden"&gt;</p>
+<p class="p1">&lt;img alt="Seoul" class="w-full h-full object-cover" data-alt="A vibrant, night-time capture of a busy Seoul street with glowing neon signs and modern architecture. The image is crisp and professional, using a sophisticated palette of deep blues and purples. The mood is high-tech and energetic, symbolizing the high-stakes environment of a weather prediction marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkPAhOODvtr-iMa9E3QmU0yQnD0d9b95gdYjh6y95nRX9Y4Dx_rrefvZZDDYeMGJveZsR5R3eb9P35lp8LxS2r2NDSxRVdQpvxpOOsRfLId-un6KCNTvU8E5nr3BHmRYdclb7KBcFRNUA3-9IQczaDwfHI8MPlhcm2jmhKMKbPJBfpad05N7H-QFIJL8wAmkhKAbfYI3Owyo0JAGGoiulUfjMTcZabglSMfec2Cz9f8mesx6gLyNj6Vb5ETpMh1LDL74nSiKXhZT0"/&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-on-surface"&gt;Seoul&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-on-surface-variant font-label-md"&gt;Oct 20, 2024&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="bg-surface-container-high px-sm py-1 rounded-md font-label-md text-on-surface"&gt;25-28°C&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right font-label-md text-on-surface"&gt;50.00 USDCE&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-container/10 text-tertiary uppercase"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>SETTLED</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right"&gt;</p>
+<p class="p1">&lt;button class="bg-tertiary text-on-tertiary font-label-md text-label-sm px-md py-1.5 rounded-lg hover:brightness-110 active:scale-95 transition-all"&gt;Claim Reward&lt;/button&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;/tr&gt;</p>
+<p class="p1">&lt;!-- Row 3: Settled/Lost --&gt;</p>
+<p class="p1">&lt;tr class="hover:bg-surface-container-low transition-colors group"&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md"&gt;</p>
+<p class="p1">&lt;div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden"&gt;</p>
+<p class="p1">&lt;img alt="Tokyo" class="w-full h-full object-cover" data-alt="A wide, clinical perspective of the Tokyo skyline at sunset, with Mount Fuji visible in the distance. The lighting is soft and golden, transitioning into cool evening tones. The aesthetic is clean and minimal, emphasizing architectural precision and clear visibility, mirroring a high-trust financial dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDVghoIer2V9U7OBbaW7BFGx2FU_BbO2vGZrk8_nyXsjQjuybBVSCa1Kau5PO1tAJUIF5PKM3OI2utSUKOq7qF-H1QGCk7_4TFlvzy-krWInuBAu9FL3EwWQu2jZNW4wQSzbx-Yukh4XsLXGx51_yeieRROhAH67_uxYY0iAgiwavD_hq9oeEvwGXrrwlONVBzZSBAIzAsBgEWny8RDmQh84R7CZyvZZ3TayqiSj6s3pLg7r5jOEG5CO6poYp2BwU6zHUdl4709_w"/&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-on-surface"&gt;Tokyo&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-on-surface-variant font-label-md"&gt;Oct 15, 2024&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="bg-surface-container-high px-sm py-1 rounded-md font-label-md text-on-surface"&gt;&amp;lt; 25°C&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right font-label-md text-on-surface"&gt;200.00 USDCE&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-outline/10 text-on-surface-variant uppercase"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>SETTLED</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right"&gt;</p>
+<p class="p1">&lt;span class="text-error font-medium"&gt;Lost&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;/tr&gt;</p>
+<p class="p1">&lt;!-- Row 4: Locked --&gt;</p>
+<p class="p1">&lt;tr class="hover:bg-surface-container-low transition-colors group"&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;div class="flex items-center gap-md"&gt;</p>
+<p class="p1">&lt;div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden"&gt;</p>
+<p class="p1">&lt;img alt="New York" class="w-full h-full object-cover" data-alt="A sleek, high-angle shot of the New York City financial district under a clear, bright sky. The focus is on the geometric textures of glass and steel skyscrapers. The lighting is high-key and professional, reinforcing an atmosphere of analytical precision and authoritative market data." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc7nGC-kg8QLoF71zlyVdaInEqetljDCMTpqdylKvfm2mPpr0fvJ2XAzb6AN_nwLilHTIHguTOMje9U_3djR2mUpztUZXsmSn7TwLqI4h9tLeB9Xtorm0w7PgFzNGlsiCAY7sEZhVQ53-KpsJSpH3P80SR01JyY7R2phZ48NA-WnVoVFHERISDlBhF-4alqMcahbUmoYn5gm3XEyTvewJ4RCM67dhVx3HdzC5qGuXJS5ZF0r-D-MonQvnXZMOtOOpmO1CWZbM249c"/&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-on-surface"&gt;New York&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-on-surface-variant font-label-md"&gt;Nov 02, 2024&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="bg-surface-container-high px-sm py-1 rounded-md font-label-md text-on-surface"&gt;12-15°C&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right font-label-md text-on-surface"&gt;150.00 USDCE&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg"&gt;</p>
+<p class="p1">&lt;span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-on-secondary-fixed-variant/10 text-on-secondary-fixed-variant uppercase"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>LOCKED</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/span&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;td class="px-lg py-lg text-right"&gt;</p>
+<p class="p1">&lt;div class="flex items-center justify-end gap-xs text-on-surface-variant"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined text-sm" data-icon="lock"&gt;lock&lt;/span&gt;</p>
+<p class="p1">&lt;span class="font-medium"&gt;Observing&lt;/span&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/td&gt;</p>
+<p class="p1">&lt;/tr&gt;</p>
+<p class="p1">&lt;/tbody&gt;</p>
+<p class="p1">&lt;/table&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;!-- Pagination/Footer of Table --&gt;</p>
+<p class="p1">&lt;div class="px-lg py-md bg-surface-container-low border-t border-outline-variant flex items-center justify-between"&gt;</p>
+<p class="p1">&lt;span class="font-label-sm text-label-sm text-on-surface-variant"&gt;Showing 4 of 28 predictions&lt;/span&gt;</p>
+<p class="p1">&lt;div class="flex gap-xs"&gt;</p>
+<p class="p1">&lt;button class="p-1 rounded hover:bg-surface-variant disabled:opacity-30" disabled=""&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined" data-icon="chevron_left"&gt;chevron_left&lt;/span&gt;</p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p1">&lt;button class="p-1 rounded hover:bg-surface-variant"&gt;</p>
+<p class="p1">&lt;span class="material-symbols-outlined" data-icon="chevron_right"&gt;chevron_right&lt;/span&gt;</p>
+<p class="p1">&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/main&gt;</p>
+<p class="p1">&lt;footer class="bg-surface-container-low border-t border-outline-variant mt-xl"&gt;</p>
+<p class="p1">&lt;div class="w-full py-lg px-lg max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md"&gt;</p>
+<p class="p1">&lt;div class="flex flex-col gap-xs items-center md:items-start"&gt;</p>
+<p class="p1">&lt;span class="font-headline-md text-on-surface font-bold"&gt;Tempo Weather Market&lt;/span&gt;</p>
+<p class="p1">&lt;p class="font-body-sm text-body-sm text-on-surface-variant"&gt;© 2024 Tempo Weather Market. Powered by Tempo Network.&lt;/p&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;div class="flex flex-wrap justify-center gap-lg"&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Documentation&lt;/a&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Weather Data Sources&lt;/a&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Privacy Policy&lt;/a&gt;</p>
+<p class="p1">&lt;a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#"&gt;Terms of Service&lt;/a&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p1">&lt;/footer&gt;</p>
+<p class="p1">&lt;!-- Interactive Hover Logic --&gt;</p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Placeholder for claim reward interaction</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const buttons = document.querySelectorAll('button');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>buttons.forEach(btn =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>btn.addEventListener('click', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if(btn.innerText === "Claim Reward") {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>const originalText = btn.innerText;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>btn.innerText = "Processing...";</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>btn.disabled = true;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>btn.innerText = "Claimed";</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>btn.classList.replace('bg-tertiary', 'bg-outline');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}, 1500);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;&lt;/html&gt;</p>
+</body>
+</html>
