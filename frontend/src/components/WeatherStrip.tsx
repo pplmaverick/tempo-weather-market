@@ -64,14 +64,32 @@ export default function WeatherStrip({ oracleCity, cityName }: Props) {
         <span style={{ color: '#777587', fontSize: 13 }}>Weather data unavailable</span>
       )}
       {data && (
-        <div style={{ display: 'flex', gap: 32 }}>
-          <Stat label="TEMPERATURE" value={`${data.temperature}°C`} highlight />
-          <Stat label="HUMIDITY" value={`${data.humidity}%`} />
-          {data.precipitation !== undefined && data.precipitation > 0 && (
-            <Stat label="PRECIPITATION" value={`${data.precipitation} mm/h`} />
-          )}
-          {data.windSpeed !== undefined && (
-            <Stat label="WIND" value={`${data.windSpeed} km/h`} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+          <div style={{ display: 'flex', gap: 32 }}>
+            <Stat label="TEMPERATURE" value={`${data.temperature}°C`} highlight />
+            <Stat label="HUMIDITY" value={`${data.humidity}%`} />
+            {data.precipitation !== undefined && data.precipitation > 0 && (
+              <Stat label="PRECIPITATION" value={`${data.precipitation} mm/h`} />
+            )}
+            {data.windSpeed !== undefined && (
+              <Stat label="WIND" value={`${data.windSpeed} km/h`} />
+            )}
+          </div>
+          {data.sources && (
+            <div style={{
+              fontSize: 11,
+              fontFamily: "'JetBrains Mono', monospace",
+              color: '#9592a3',
+              letterSpacing: '0.03em',
+            }}>
+              {[
+                data.sources.openweather !== undefined && `OW: ${data.sources.openweather}°`,
+                data.sources.weatherapi  !== undefined && `WA: ${data.sources.weatherapi}°`,
+                data.sources.openmeteo   !== undefined && `OM: ${data.sources.openmeteo}°`,
+              ].filter(Boolean).join(' | ')}
+              {' '}
+              <span style={{ color: '#b8b5c6' }}>({data.sources.count}/3 sources)</span>
+            </div>
           )}
         </div>
       )}

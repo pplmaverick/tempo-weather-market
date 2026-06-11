@@ -7,6 +7,13 @@ interface WeatherData {
   description: string
   windSpeed?: number
   precipitation?: number
+  sources?: {
+    median: number
+    count: number
+    openweather?: number
+    weatherapi?: number
+    openmeteo?: number
+  }
 }
 
 export function useWeather(city: string) {
