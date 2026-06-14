@@ -5,6 +5,8 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.28-purple)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+**[🌐 Live Demo → tempo-weather-market.vercel.app](https://tempo-weather-market.vercel.app)**
+
 Prediction market infrastructure built natively on Tempo Network | Weather as first use case | MPP · Payment Memo · Fee Sponsorship · Scheduled Transactions | pathUSD/USDC settlement
 
 **Deployed on both Testnet and Mainnet.**
