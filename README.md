@@ -13,8 +13,8 @@ Prediction market infrastructure built natively on Tempo Network | Weather as fi
 
 | Network | Contract Address |
 |---|---|
-| Tempo Mainnet (4217) | `0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f` |
-| Tempo Moderato Testnet (42431) | `0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953` |
+| Tempo Mainnet (4217) | [`0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f`](https://explore.tempo.xyz/address/0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f) |
+| Tempo Moderato Testnet (42431) | [`0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953`](https://explore.tempo.xyz/address/0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953) |
 
 ## Why Tempo-Native
 
@@ -200,8 +200,8 @@ Bucket boundaries use the same x10 encoding as temperatures. Given `buckets = [2
 | M2 | Oracle retry logic (3 attempts, 2s delay) | ✅ Complete |
 | M3 | Multi-city support: Taipei, Tokyo, New York, Seoul | ✅ Complete |
 | M4 | Developer docs: .env.example with inline comments, README setup guide | ✅ Complete |
-| M5 | React frontend on Vercel | 🔄 In Progress |
-| M6 | Multi-source weather median | 📋 Planned |
+| M5 | React frontend on Vercel | ✅ Complete |
+| M6 | Multi-source weather median: OpenWeather + WeatherAPI + Open-Meteo, frontend source breakdown display | ✅ Complete |
 | M7 | TypeScript SDK | 📋 Planned |
 
 ## Developer
