@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi'
 import { parseUnits } from 'viem'
 import { WEATHER_MARKET_ABI, ERC20_ABI, CONTRACTS, STABLECOINS } from '../config/contracts'
 import { activeChain } from '../config/wagmi'
@@ -9,7 +9,8 @@ const contractAddress = CONTRACTS[network]
 const { decimals } = STABLECOINS[network]
 
 export function usePlaceBet() {
-  const { address } = useAccount()
+  const { address, chainId } = useAccount()
+  const { switchChainAsync } = useSwitchChain()
   const [step, setStep] = useState<'idle' | 'approving' | 'betting' | 'done' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -42,11 +43,18 @@ export function usePlaceBet() {
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>()
   const { isLoading: isConfirming } = useWaitForTransactionReceipt({ hash: txHash })
 
+  async function ensureChain() {
+    if (chainId !== activeChain.id) {
+      await switchChainAsync({ chainId: activeChain.id })
+    }
+  }
+
   async function placeBet(marketId: bigint, bucket: number, amountStr: string) {
     if (!address || !stablecoin) return
     setStep('idle')
     setErrorMsg('')
     try {
+      await ensureChain()
       const amount = parseUnits(amountStr, decimals)
       if ((allowance ?? 0n) < amount) {
         setStep('approving')
@@ -81,6 +89,7 @@ export function usePlaceBet() {
     setStep('idle')
     setErrorMsg('')
     try {
+      await ensureChain()
       setStep('betting')
       const tx = await writeContractAsync({
         address: contractAddress,
