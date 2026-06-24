@@ -1,4 +1,3 @@
-import { BUCKET_LABELS } from '../config/contracts'
 import { formatUnits } from 'viem'
 
 interface Props {
@@ -7,9 +6,10 @@ interface Props {
   onSelect: (i: number) => void
   status: number
   winningBucket?: number
+  labels: string[]
 }
 
-export default function BucketBar({ bucketTotals, selectedBucket, onSelect, status, winningBucket }: Props) {
+export default function BucketBar({ bucketTotals, selectedBucket, onSelect, status, winningBucket, labels }: Props) {
   const totalPool = bucketTotals?.reduce((a, b) => a + b, 0n) ?? 0n
 
   return (
@@ -17,7 +17,7 @@ export default function BucketBar({ bucketTotals, selectedBucket, onSelect, stat
       <div style={{ fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: '#464555', marginBottom: 4 }}>
         TEMPERATURE RANGE SELECTOR
       </div>
-      {BUCKET_LABELS.map((label, i) => {
+      {labels.map((label, i) => {
         const bucketTotal = bucketTotals?.[i] ?? 0n
         const pct = totalPool > 0n ? Number((bucketTotal * 100n) / totalPool) : 0
         const isSelected = selectedBucket === i

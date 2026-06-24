@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { formatUnits } from 'viem'
-import { CITIES, BUCKET_LABELS, MARKET_STATUS, STABLECOINS } from '../config/contracts'
+import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
 import { useMarket } from '../hooks/useMarket'
 import { useWeather } from '../hooks/useWeather'
 import { usePlaceBet } from '../hooks/usePlaceBet'
@@ -118,6 +118,7 @@ export default function Markets() {
               onSelect={setSelectedBucket}
               status={status}
               winningBucket={market?.[7]}
+              labels={[...city.bucketLabels]}
             />
 
             {status === MARKET_STATUS.SETTLED && market?.[9] === false && (
@@ -128,7 +129,7 @@ export default function Markets() {
                 </div>
                 <div style={{ marginTop: 8, fontSize: 14, color: '#464555' }}>
                   Final Temp: <strong>{market?.[6] !== undefined ? (Number(market[6]) / 10).toFixed(1) : '—'}°C</strong>
-                  {' · '}Winning Range: <strong>{BUCKET_LABELS[market?.[7] ?? 0]}</strong>
+                  {' · '}Winning Range: <strong>{city.bucketLabels[market?.[7] ?? 0]}</strong>
                 </div>
               </div>
             )}
@@ -158,7 +159,7 @@ export default function Markets() {
                   minHeight: 42,
                 }}>
                   <span style={{ fontWeight: 600, fontSize: 16 }}>
-                    {selectedBucket !== null ? BUCKET_LABELS[selectedBucket] : <span style={{ color: '#777587' }}>Select a range above</span>}
+                    {selectedBucket !== null ? city.bucketLabels[selectedBucket] : <span style={{ color: '#777587' }}>Select a range above</span>}
                   </span>
                 </div>
               </div>

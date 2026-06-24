@@ -1,5 +1,5 @@
 import { formatUnits } from 'viem'
-import { CITIES, BUCKET_LABELS, MARKET_STATUS, STABLECOINS } from '../config/contracts'
+import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
 import { useMarket, useContractAddress } from '../hooks/useMarket'
 
 const network = (import.meta.env.VITE_NETWORK ?? 'mainnet') as 'mainnet' | 'testnet'
@@ -65,7 +65,7 @@ function MarketCard({ city }: { city: typeof CITIES[number] }) {
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
                     <span style={{ fontSize: 38, fontWeight: 700 }}>{finalTemp !== undefined ? (Number(finalTemp) / 10).toFixed(1) : '—'}°C</span>
                     <span style={{ color: '#4d41df', fontWeight: 700, fontSize: 15 }}>
-                      Winning Range: {winningBucket !== undefined ? BUCKET_LABELS[winningBucket] : '—'}
+                      Winning Range: {winningBucket !== undefined ? city.bucketLabels[winningBucket] : '—'}
                     </span>
                   </div>
                 )}
@@ -79,7 +79,7 @@ function MarketCard({ city }: { city: typeof CITIES[number] }) {
               <div>
                 <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: '#464555', marginBottom: 8 }}>POOL DISTRIBUTION</div>
                 <div style={{ display: 'flex', height: 20, borderRadius: 999, overflow: 'hidden', background: '#edeeef' }}>
-                  {BUCKET_LABELS.map((_, i) => {
+                  {city.bucketLabels.map((_, i) => {
                     const bt = bucketTotals?.[i] ?? 0n
                     const pct = totalPool > 0n ? Number((bt * 100n) / totalPool) : 0
                     const colors = ['#c7c4d8', '#a8a0f8', '#4d41df', '#575e70', '#914800']
@@ -87,13 +87,13 @@ function MarketCard({ city }: { city: typeof CITIES[number] }) {
                       <div
                         key={i}
                         style={{ width: `${pct}%`, height: '100%', background: colors[i] }}
-                        title={`${BUCKET_LABELS[i]}: ${pct}%`}
+                        title={`${city.bucketLabels[i]}: ${pct}%`}
                       />
                     ) : null
                   })}
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
-                  {BUCKET_LABELS.map((label, i) => {
+                  {city.bucketLabels.map((label, i) => {
                     const bt = bucketTotals?.[i] ?? 0n
                     const pct = totalPool > 0n ? Number((bt * 100n) / totalPool) : 0
                     const colors = ['#c7c4d8', '#a8a0f8', '#4d41df', '#575e70', '#914800']
@@ -110,7 +110,7 @@ function MarketCard({ city }: { city: typeof CITIES[number] }) {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {BUCKET_LABELS.map((label, i) => {
+            {city.bucketLabels.map((label, i) => {
               const bt = bucketTotals?.[i] ?? 0n
               const pct = totalPool > 0n ? Number((bt * 100n) / totalPool) : 0
               return (

@@ -9,10 +9,22 @@ export const STABLECOINS = {
 } as const
 
 export const CITIES = [
-  { name: 'Taipei',   marketId: 1n, code: 'taipei',  oracleCity: 'Taipei'   },
-  { name: 'Tokyo',    marketId: 3n, code: 'tokyo',    oracleCity: 'Tokyo'    },
-  { name: 'New York', marketId: 2n, code: 'new-york', oracleCity: 'New York' },
-  { name: 'Seoul',    marketId: 4n, code: 'seoul',    oracleCity: 'Seoul'    },
+  {
+    name: 'Taipei',   marketId: 8n,  code: 'taipei',  oracleCity: 'Taipei',
+    bucketLabels: ['< 25°C', '25–28°C', '28–31°C', '31–34°C', '> 34°C'] as string[],
+  },
+  {
+    name: 'Tokyo',    marketId: 9n,  code: 'tokyo',    oracleCity: 'Tokyo',
+    bucketLabels: ['< 22°C', '22–25°C', '25–28°C', '28–31°C', '> 31°C'] as string[],
+  },
+  {
+    name: 'New York', marketId: 10n, code: 'new-york', oracleCity: 'New York',
+    bucketLabels: ['< 20°C', '20–23°C', '23–26°C', '26–29°C', '> 29°C'] as string[],
+  },
+  {
+    name: 'Seoul',    marketId: 11n, code: 'seoul',    oracleCity: 'Seoul',
+    bucketLabels: ['< 20°C', '20–23°C', '23–26°C', '26–29°C', '> 29°C'] as string[],
+  },
 ] as const
 
 export const BUCKET_LABELS = [

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { formatUnits } from 'viem'
-import { CITIES, BUCKET_LABELS, MARKET_STATUS, STABLECOINS } from '../config/contracts'
+import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
 import { useMarket, useUserBets } from '../hooks/useMarket'
 import { usePlaceBet } from '../hooks/usePlaceBet'
 
@@ -63,7 +63,7 @@ function CityBetRow({ city, userAddress }: { city: typeof CITIES[number]; userAd
               color: status === MARKET_STATUS.SETTLED && winningBucket === b.i ? '#4d41df' : '#191c1d',
               fontWeight: status === MARKET_STATUS.SETTLED && winningBucket === b.i ? 700 : 400,
             }}>
-              {BUCKET_LABELS[b.i]}
+              {city.bucketLabels[b.i]}
             </span>
             <span style={{ fontSize: 13, color: '#464555', fontFamily: "'JetBrains Mono', monospace" }}>
               {Number(formatUnits(b.amt, 6)).toFixed(2)} {symbol}
