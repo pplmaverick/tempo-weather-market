@@ -1,5 +1,6 @@
 # Tempo Weather Market
 
+[![CI](https://github.com/pplmaverick/tempo-weather-market/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/pplmaverick/tempo-weather-market/actions/workflows/test.yml)
 ![Tempo Mainnet](https://img.shields.io/badge/Tempo_Mainnet-4217-blue)
 ![Tempo Testnet](https://img.shields.io/badge/Tempo_Testnet-42431-gray)
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.28-purple)
