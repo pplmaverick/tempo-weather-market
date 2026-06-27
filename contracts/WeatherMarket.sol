@@ -130,6 +130,17 @@ contract WeatherMarket is ReentrancyGuard, Ownable {
     event GasTankWithdrawn(address indexed to, uint256 amount);
     event RelayerUpdated(address indexed relayer, bool approved);
     event ScheduledLock(uint256 indexed marketId, bytes32 taskId);
+    event SettlementExecuted(
+        uint256 indexed marketId,
+        string  city,
+        int256  tempOpenWeather,
+        int256  tempWeatherApi,
+        int256  tempOpenMeteo,
+        int256  medianTemp,
+        uint8   winningBucket,
+        bool    noWinner,
+        uint256 totalPool
+    );
 
     // ─── Modifiers ────────────────────────────────────────────────────────────
 
@@ -331,6 +342,18 @@ contract WeatherMarket is ReentrancyGuard, Ownable {
         m.noWinner = noWinner;
         m.status = Status.SETTLED;
         m.settleMemo = memo; // Payment Memo
+
+        emit SettlementExecuted(
+            marketId,
+            m.city,
+            0,   // tempOpenWeather — 三源值由 memo 攜帶，event 欄位保留供未來升級
+            0,   // tempWeatherApi
+            0,   // tempOpenMeteo
+            finalTemp,
+            winning,
+            noWinner,
+            m.totalPool
+        );
 
         // 只在有得獎者時收市場手續費
         if (!noWinner) {

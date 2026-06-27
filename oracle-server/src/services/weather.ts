@@ -38,6 +38,13 @@ interface OpenMeteoResponse {
   current: { temperature_2m: number };
 }
 
+export interface TempWithSources {
+  finalTemp: number;  // °C × 10
+  ow?: number;        // OpenWeather °C × 10
+  wa?: number;        // WeatherAPI °C × 10
+  om?: number;        // Open-Meteo °C × 10
+}
+
 export interface CurrentWeatherData {
   city: string;
   temperature: number;   // °C median of up to 3 sources
@@ -163,6 +170,37 @@ interface OWForecastItem {
   main: { temp: number; temp_max: number };
 }
 
+// 三源即時溫度取中位數（含各源個別值）
+async function fetchCurrentTempWithSources(city: string): Promise<TempWithSources> {
+  const [owResult, waResult, omResult] = await Promise.allSettled([
+    fetchOpenWeatherCurrent(city).then((d) => d.main.temp),
+    fetchWeatherAPI(city),
+    fetchOpenMeteo(city),
+  ]);
+
+  const temps: number[] = [];
+  const ow = owResult.status === "fulfilled" ? owResult.value : undefined;
+  const wa = waResult.status === "fulfilled" ? waResult.value : undefined;
+  const om = omResult.status === "fulfilled" ? omResult.value : undefined;
+
+  if (ow !== undefined) temps.push(ow);
+  if (wa !== undefined) temps.push(wa);
+  if (om !== undefined) temps.push(om);
+
+  if (temps.length === 0) throw new Error(`All weather sources failed for ${city}`);
+
+  const med = median(temps);
+  console.log(
+    `[weather] ${city} temps — OW: ${ow?.toFixed(1) ?? "ERR"} | WA: ${wa?.toFixed(1) ?? "ERR"} | OM: ${om?.toFixed(1) ?? "ERR"} → median: ${med.toFixed(1)}°C`
+  );
+  return {
+    finalTemp: Math.round(med * 10),
+    ow: ow !== undefined ? Math.round(ow * 10) : undefined,
+    wa: wa !== undefined ? Math.round(wa * 10) : undefined,
+    om: om !== undefined ? Math.round(om * 10) : undefined,
+  };
+}
+
 // 三源即時溫度取中位數
 async function fetchCurrentTemp(city: string): Promise<number> {
   const [owResult, waResult, omResult] = await Promise.allSettled([
@@ -233,4 +271,22 @@ export async function getMaxTemp(city: string, targetDate: Date): Promise<number
   }
 
   return Math.round(tempC * 10);
+}
+
+// 取得指定城市在 targetDate 的最高氣溫，同時回傳三源個別值（°C × 10）
+export async function getMaxTempWithSources(city: string, targetDate: Date): Promise<TempWithSources> {
+  const nowMs = Date.now();
+  const targetMs = targetDate.getTime();
+  const diffDays = (targetMs - nowMs) / 86_400_000;
+
+  if (diffDays > 0 && diffDays <= 5) {
+    // 預報模式：只有 OW，無三源
+    const tempC = await fetchForecastMaxTemp(city, targetDate);
+    return { finalTemp: Math.round(tempC * 10) };
+  }
+
+  if (diffDays < 0) console.warn(`[weather] ${city} targetDate 已過去，使用即時氣溫代替`);
+  if (diffDays > 5) console.warn(`[weather] ${city} targetDate 超過 5 天，使用即時氣溫代替`);
+
+  return fetchCurrentTempWithSources(city);
 }

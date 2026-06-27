@@ -45,11 +45,9 @@ const TARGET_DELAY = 180;
 // ─── 城市設定 ──────────────────────────────────────────────────────────────────
 // buckets 為溫度門檻 °C × 10，形成 5 個區間
 // betBucket 為下注的區間索引（0-based）
+// W6 e2e: 單城市 Taipei，betBucket=1 對應 25-28°C 區間（當前約 25-26°C）
 const CITIES = [
-  { name: "Taipei",   buckets: [250n, 280n, 310n, 340n] as bigint[], betBucket: 2 }, // 31.0-34.0°C
-  { name: "Tokyo",    buckets: [220n, 260n, 300n, 340n] as bigint[], betBucket: 2 }, // 30.0-34.0°C
-  { name: "New York", buckets: [200n, 250n, 300n, 350n] as bigint[], betBucket: 2 }, // 30.0-35.0°C
-  { name: "Seoul",    buckets: [220n, 260n, 300n, 340n] as bigint[], betBucket: 2 }, // 30.0-34.0°C
+  { name: "Taipei",   buckets: [250n, 280n, 310n, 340n] as bigint[], betBucket: 1 }, // 25.0-28.0°C
 ] as const;
 
 // ─── 型別 ──────────────────────────────────────────────────────────────────────
@@ -453,10 +451,10 @@ async function main() {
   console.log(`  oracleFee    : ${oracleFee} raw = ${Number(oracleFee) / 1e6} USDC.e`);
   console.log(`  預計市場     : #${nextMarketId} ~ #${nextMarketId + 3n}`);
 
-  // 4 城市各需 1 USDC.e 下注 + oracle fee，最少需要 5 USDC.e
-  const minRequired = e6(5);
+  // 單城市 Taipei：1 USDC.e 下注 + oracle fee（約 0.2）+ 手續費
+  const minRequired = e6(2);
   if (usdcBal < minRequired) {
-    throw new Error(`USDC.e 不足，目前 ${Number(usdcBal) / 1e6}，需要至少 5 USDC.e（4 城市各 1 + gas）`);
+    throw new Error(`USDC.e 不足，目前 ${Number(usdcBal) / 1e6}，需要至少 2 USDC.e`);
   }
 
   // ── 一次性 Approve（maxUint256，後續城市共用）──────────────────────────────

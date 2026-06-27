@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { getMarket, getOracleFee, submitResult, verifyPathUSDTransfer, account, networkInfo } from "../services/chain.js";
-import { getMaxTemp, getCurrentWeather } from "../services/weather.js";
+import { getMaxTempWithSources, getCurrentWeather } from "../services/weather.js";
 import { buildChallenge, verifyNonce, isTxUsed, markTxUsed } from "../services/payment.js";
 
 export const oracleRouter = Router();
@@ -86,11 +86,18 @@ oracleRouter.post("/settle", async (req: Request, res: Response) => {
     markTxUsed(paymentTxHash);
   }
 
-  // 4. 取得實際氣溫（OpenWeather API）
+  // 4. 取得實際氣溫（三源）
   let finalTemp: number;
+  let owTemp: number | undefined;
+  let waTemp: number | undefined;
+  let omTemp: number | undefined;
   try {
     const targetDate = new Date(Number(market.targetDate) * 1000);
-    finalTemp = await getMaxTemp(market.city, targetDate);
+    const result = await getMaxTempWithSources(market.city, targetDate);
+    finalTemp = result.finalTemp;
+    owTemp = result.ow;
+    waTemp = result.wa;
+    omTemp = result.om;
   } catch (err) {
     return res.status(502).json({
       error: "OpenWeather API 呼叫失敗",
@@ -98,9 +105,15 @@ oracleRouter.post("/settle", async (req: Request, res: Response) => {
     });
   }
 
-  // 5. 產生 Payment Memo
+  // 5. 產生 Payment Memo（含三源）
   const outcome = determineOutcome(market.buckets, BigInt(finalTemp), market.noWinner);
-  const memo = `${market.city}/${market.predictionType}/${finalTemp}/${outcome}`;
+  let memo = `${market.city}/${market.predictionType}/${finalTemp}/${outcome}`;
+  const sourceParts = [
+    owTemp !== undefined ? `ow:${owTemp}` : null,
+    waTemp !== undefined ? `wa:${waTemp}` : null,
+    omTemp !== undefined ? `om:${omTemp}` : null,
+  ].filter(Boolean).join(",");
+  if (sourceParts) memo += `|${sourceParts}`;
 
   // 6. 呼叫合約 submitResult()
   let receipt;
