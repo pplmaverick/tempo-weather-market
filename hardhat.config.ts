@@ -3,6 +3,7 @@ import hardhatViem from "@nomicfoundation/hardhat-viem";
 import hardhatIgnitionViem from "@nomicfoundation/hardhat-ignition-viem";
 import hardhatNetworkHelpers from "@nomicfoundation/hardhat-network-helpers";
 import hardhatMocha from "@nomicfoundation/hardhat-mocha";
+import hardhatVerify from "@nomicfoundation/hardhat-verify";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,7 +15,7 @@ dotenv.config();
 const PRIVATE_KEY = process.env.PRIVATE_KEY ?? "";
 
 export default defineConfig({
-  plugins: [hardhatViem, hardhatIgnitionViem, hardhatNetworkHelpers, hardhatMocha],
+  plugins: [hardhatViem, hardhatIgnitionViem, hardhatNetworkHelpers, hardhatMocha, hardhatVerify],
 
   solidity: {
     version: "0.8.28",
