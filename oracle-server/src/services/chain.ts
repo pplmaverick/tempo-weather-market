@@ -182,6 +182,12 @@ export async function submitResult(
   finalTemp: number,
   memo: string
 ): Promise<SettlementReceipt> {
+  // marketId 存在性檢查：未曾 createMarket() 過的 ID，lockTime 預設為 0
+  const market = await getMarket(marketId);
+  if (market.lockTime === 0n) {
+    throw new Error(`Market ${marketId} does not exist`);
+  }
+
   // mainnet 的 writeContract 會透過 feeToken chain hook 產生 Tempo 0x76 交易
   // testnet 的 writeContract 用標準 EIP-1559（pathUSD 是 native token）
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -207,8 +213,6 @@ export async function submitResult(
     functionName: "getReceipt",
     args: [BigInt(marketId)],
   })) as { finalTemp: bigint; winningBucket: number; noWinner: boolean; memo: string; timestamp: bigint };
-
-  const market = await getMarket(marketId);
 
   return {
     marketId,
