@@ -348,9 +348,9 @@ contract WeatherMarket is ReentrancyGuard, Ownable {
         emit SettlementExecuted(
             marketId,
             m.city,
-            0,   // tempOpenWeather — 三源值由 memo 攜帶，event 欄位保留供未來升級
-            0,   // tempWeatherApi
-            0,   // tempOpenMeteo
+            0,   // tempOpenWeather — 三源值記錄於 memo 參數，格式：{city}/{type}/{temp}/{outcome}|ow:{value},wa:{value},om:{value}（單位：°C × 10）
+            0,   // tempWeatherApi  — 同上
+            0,   // tempOpenMeteo   — 同上
             finalTemp,
             winning,
             noWinner,
