@@ -28,21 +28,18 @@ const NETWORK_CONFIG = {
     label: "Tempo Moderato Testnet (Chain ID: 42431)",
     stablecoinEnvKey: "PATHUSD_ADDRESS",
     stablecoinSymbol: "pathUSD",
-    decimals: 18,
     explorerTx: "https://explorer.moderato.tempo.xyz/tx",
   },
   tempo: {
     label: "Tempo Mainnet (Chain ID: 4217)",
     stablecoinEnvKey: "USDCE_ADDRESS",
     stablecoinSymbol: "USDC.e",
-    decimals: 6,
     explorerTx: "https://explorer.tempo.xyz/tx",
   },
   hardhat: {
     label: "Hardhat Local",
     stablecoinEnvKey: "PATHUSD_ADDRESS",
     stablecoinSymbol: "MockUSD",
-    decimals: 18,
     explorerTx: "",
   },
 } as const;
@@ -64,6 +61,18 @@ function optionalEnvAddress(key: string): `0x${string}` {
   if (!isAddress(val)) throw new Error(`${key} 不是合法地址：${val}`);
   return val as `0x${string}`;
 }
+
+// stablecoin 的 decimals 一律向鏈上查詢，不假設固定值
+// （pathUSD precompile 實際是 6，不是常見 ERC20 的 18）
+const ERC20_DECIMALS_ABI = [
+  {
+    name: "decimals",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint8" }],
+  },
+] as const;
 
 // ─── 主流程 ───────────────────────────────────────────────────────────────────
 
@@ -89,9 +98,15 @@ async function main() {
   const oracleAddress = requireEnvAddress("ORACLE_ADDRESS");
   const schedulerAddress = optionalEnvAddress("SCHEDULER_ADDRESS");
 
+  const decimals = (await publicClient.readContract({
+    address: stablecoinAddress,
+    abi: ERC20_DECIMALS_ABI,
+    functionName: "decimals",
+  })) as number;
+
   // MPP oracle 費用（預設 0，之後可用 setOracleFee() 調整）
   const oracleFeeAmount = process.env.ORACLE_FEE_AMOUNT ?? "0";
-  const oracleFee = parseUnits(oracleFeeAmount, cfg.decimals);
+  const oracleFee = parseUnits(oracleFeeAmount, decimals);
 
   // ── 印出部署摘要 ────────────────────────────────────────────────────────────
 
@@ -296,7 +311,7 @@ async function main() {
     stablecoin: {
       symbol: cfg.stablecoinSymbol,
       address: stablecoinAddress,
-      decimals: cfg.decimals,
+      decimals,
     },
     oracle: oracleAddress,
     scheduler: schedulerAddress === zeroAddress ? null : schedulerAddress,

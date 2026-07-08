@@ -231,6 +231,8 @@ contract WeatherMarket is ReentrancyGuard, Ownable {
         uint256 lockTime
     ) external onlyOwner returns (uint256 marketId) {
         require(buckets.length > 0, "WeatherMarket: empty buckets");
+        // winningBucket 是 uint8（0-255），可能的 bucket 數量 = buckets.length + 1（含最上層溢出區間）；
+        // 253 + 1 = 254，保留 2 個緩衝空間避免剛好頂到 uint8 上限 255
         require(buckets.length <= 253, "WeatherMarket: too many buckets");
         require(lockTime > block.timestamp, "WeatherMarket: lockTime in past");
         require(targetDate > lockTime, "WeatherMarket: targetDate before lockTime");

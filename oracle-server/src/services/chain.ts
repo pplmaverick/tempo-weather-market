@@ -25,17 +25,6 @@ const activeStablecoinAddress = (
   isMainnet ? process.env.USDCE_ADDRESS : process.env.PATHUSD_ADDRESS
 ) as `0x${string}`;
 
-// networkInfo 供其他模組讀取（payment.ts, routes/oracle.ts, index.ts）
-export const networkInfo = {
-  network: TEMPO_NETWORK,
-  chainId: isMainnet ? 4217 : 42431,
-  rpcUrl: activeRpcUrl,
-  contractAddress: activeContractAddress,
-  stablecoinAddress: activeStablecoinAddress,
-  stablecoinSymbol: isMainnet ? "USDCE" : "pathUSD",
-  stablecoinDecimals: isMainnet ? 6 : 18,
-} as const;
-
 // ─── Chain 定義 ───────────────────────────────────────────────────────────────
 //
 // testnet（moderato, chainId 42431）：pathUSD 是 native token，標準 EIP-1559 即可
@@ -46,6 +35,39 @@ export const networkInfo = {
 const activeChain: any = isMainnet
   ? { ...tempoMainnetChain, feeToken: activeStablecoinAddress }
   : tempoTestnetChain;
+
+export const publicClient = createPublicClient({
+  chain: activeChain,
+  transport: http(activeRpcUrl),
+});
+
+// stablecoin 的 decimals 直接向鏈上查詢（pathUSD precompile 實際是 6，不是常見 ERC20 的 18）
+const ERC20_DECIMALS_ABI = [
+  {
+    name: "decimals",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint8" }],
+  },
+] as const;
+
+const stablecoinDecimals = await publicClient.readContract({
+  address: activeStablecoinAddress,
+  abi: ERC20_DECIMALS_ABI,
+  functionName: "decimals",
+});
+
+// networkInfo 供其他模組讀取（payment.ts, routes/oracle.ts, index.ts）
+export const networkInfo = {
+  network: TEMPO_NETWORK,
+  chainId: isMainnet ? 4217 : 42431,
+  rpcUrl: activeRpcUrl,
+  contractAddress: activeContractAddress,
+  stablecoinAddress: activeStablecoinAddress,
+  stablecoinSymbol: isMainnet ? "USDCE" : "pathUSD",
+  stablecoinDecimals,
+} as const;
 
 // ─── ABI（JSON 格式，避免 abitype 不支援 human-readable tuple 回傳）────────────
 
@@ -118,11 +140,6 @@ if (!privateKey) throw new Error("ORACLE_PRIVATE_KEY 未設定");
 export const account = privateKeyToAccount(
   (privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`) as `0x${string}`
 );
-
-export const publicClient = createPublicClient({
-  chain: activeChain,
-  transport: http(activeRpcUrl),
-});
 
 const walletClient = createWalletClient({
   account,
