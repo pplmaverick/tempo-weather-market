@@ -1,9 +1,24 @@
 import { Router, type Request, type Response } from "express";
+import { Mppx, tempo } from "mppx/express";
 import { getMarket, getOracleFee, submitResult, verifyPathUSDTransfer, account, networkInfo } from "../services/chain.js";
 import { getMaxTempWithSources, getCurrentWeather } from "../services/weather.js";
 import { buildChallenge, verifyNonce, isTxUsed, markTxUsed } from "../services/payment.js";
 
 export const oracleRouter = Router();
+
+// ─── MPP 付費閘門（GET /oracle/weather/:city，$0.01/次）───────────────────────
+
+export const mppx = Mppx.create({
+  methods: [
+    tempo({
+      currency: networkInfo.stablecoinAddress,
+      recipient: account.address,
+    }),
+  ],
+  secretKey: process.env.MPP_SECRET_KEY!,
+});
+
+export const weatherPay = mppx.charge({ amount: "0.01" });
 
 // ─── POST /oracle/settle ──────────────────────────────────────────────────────
 //
@@ -159,9 +174,9 @@ oracleRouter.get("/market/:marketId", async (req: Request, res: Response) => {
 });
 
 // ─── GET /oracle/weather/:city ────────────────────────────────────────────────
-// 回傳城市即時天氣（供前端 WeatherStrip 使用）
+// 回傳城市即時天氣（供前端 WeatherStrip 使用，MPP 付費 $0.01/次）
 
-oracleRouter.get("/weather/:city", async (req: Request, res: Response) => {
+oracleRouter.get("/weather/:city", weatherPay, async (req: Request, res: Response) => {
   const city = req.params.city;
   try {
     const data = await getCurrentWeather(city);
