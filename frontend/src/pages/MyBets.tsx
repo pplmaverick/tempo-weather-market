@@ -2,15 +2,15 @@ import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { formatUnits } from 'viem'
 import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
-import { useMarket, useUserBets } from '../hooks/useMarket'
+import { useMarket, useUserBets, useLatestMarkets } from '../hooks/useMarket'
 import { usePlaceBet } from '../hooks/usePlaceBet'
 
 const network = (import.meta.env.VITE_NETWORK ?? 'mainnet') as 'mainnet' | 'testnet'
 const { symbol } = STABLECOINS[network]
 
-function CityBetRow({ city, userAddress }: { city: typeof CITIES[number]; userAddress: `0x${string}` }) {
-  const { market, bucketTotals } = useMarket(city.marketId)
-  const userBets = useUserBets(city.marketId, userAddress)
+function CityBetRow({ city, marketId, userAddress }: { city: typeof CITIES[number]; marketId: bigint; userAddress: `0x${string}` }) {
+  const { market, bucketTotals } = useMarket(marketId)
+  const userBets = useUserBets(marketId, userAddress)
   const { claimWinnings, step } = usePlaceBet()
 
   const status = market?.[4] ?? 0
@@ -99,7 +99,7 @@ function CityBetRow({ city, userAddress }: { city: typeof CITIES[number]; userAd
               Est. {estimateWinnings(winningBucket ?? 0)} {symbol}
             </div>
             <button
-              onClick={() => claimWinnings(city.marketId)}
+              onClick={() => claimWinnings(marketId)}
               disabled={step === 'betting'}
               style={{
                 background: '#914800', color: '#fff',
@@ -122,6 +122,7 @@ function CityBetRow({ city, userAddress }: { city: typeof CITIES[number]; userAd
 export default function MyBets() {
   const { address, isConnected } = useAccount()
   const [filter, setFilter] = useState<'all' | 'active' | 'history'>('all')
+  const markets = useLatestMarkets()
 
   if (!isConnected) {
     return (
@@ -193,8 +194,8 @@ export default function MyBets() {
               </tr>
             </thead>
             <tbody>
-              {address && CITIES.map(city => (
-                <CityBetRow key={city.code} city={city} userAddress={address} />
+              {address && CITIES.map((city, i) => (
+                <CityBetRow key={city.code} city={city} marketId={markets?.[i]?.marketId ?? 0n} userAddress={address} />
               ))}
             </tbody>
           </table>

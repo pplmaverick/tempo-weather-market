@@ -10,19 +10,19 @@ export const STABLECOINS = {
 
 export const CITIES = [
   {
-    name: 'Taipei',   marketId: 13n, code: 'taipei',  oracleCity: 'Taipei',
+    name: 'Taipei',   code: 'taipei',  oracleCity: 'Taipei',
     bucketLabels: ['< 25°C', '25–28°C', '28–31°C', '31–34°C', '> 34°C'] as string[],
   },
   {
-    name: 'Tokyo',    marketId: 14n, code: 'tokyo',    oracleCity: 'Tokyo',
+    name: 'Tokyo',    code: 'tokyo',    oracleCity: 'Tokyo',
     bucketLabels: ['< 22°C', '22–25°C', '25–28°C', '28–31°C', '> 31°C'] as string[],
   },
   {
-    name: 'New York', marketId: 15n, code: 'new-york', oracleCity: 'New York',
+    name: 'New York', code: 'new-york', oracleCity: 'New York',
     bucketLabels: ['< 20°C', '20–23°C', '23–26°C', '26–29°C', '> 29°C'] as string[],
   },
   {
-    name: 'Seoul',    marketId: 16n, code: 'seoul',    oracleCity: 'Seoul',
+    name: 'Seoul',    code: 'seoul',    oracleCity: 'Seoul',
     bucketLabels: ['< 20°C', '20–23°C', '23–26°C', '26–29°C', '> 29°C'] as string[],
   },
 ] as const
@@ -40,6 +40,13 @@ export const BUCKET_BOUNDARIES = [250n, 280n, 310n, 340n] as const
 export const MARKET_STATUS = { OPEN: 0, LOCKED: 1, SETTLED: 2 } as const
 
 export const WEATHER_MARKET_ABI = [
+  {
+    inputs: [],
+    name: 'nextMarketId',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
   {
     name: 'getMarket',
     type: 'function',

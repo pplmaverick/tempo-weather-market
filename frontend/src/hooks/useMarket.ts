@@ -49,3 +49,24 @@ export function useUserBets(marketId: bigint, userAddress?: `0x${string}`) {
 export function useContractAddress() {
   return address
 }
+
+// 城市順序必須跟 createMarket 建立順序一致：Taipei/Tokyo/New York/Seoul
+const CITY_ORDER = ['Taipei', 'Tokyo', 'New York', 'Seoul'] as const
+
+export function useLatestMarkets() {
+  const { data: nextId } = useReadContract({
+    address,
+    abi: WEATHER_MARKET_ABI,
+    functionName: 'nextMarketId',
+    chainId: activeChain.id,
+  })
+
+  if (!nextId || nextId < 4n) return null // null = still loading
+
+  // 往回推 4 個，對應 CITY_ORDER
+  const startId = nextId - 4n
+  return CITY_ORDER.map((cityName, i) => ({
+    cityName,
+    marketId: startId + BigInt(i),
+  }))
+}

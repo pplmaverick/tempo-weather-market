@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { formatUnits } from 'viem'
 import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
-import { useMarket } from '../hooks/useMarket'
+import { useMarket, useLatestMarkets } from '../hooks/useMarket'
 import { useWeather } from '../hooks/useWeather'
 import { usePlaceBet } from '../hooks/usePlaceBet'
 import WeatherStrip from '../components/WeatherStrip'
@@ -14,7 +14,10 @@ const { symbol } = STABLECOINS[network]
 export default function Markets() {
   const [cityIdx, setCityIdx] = useState(0)
   const city = CITIES[cityIdx]
-  const { market, bucketTotals, isLoading } = useMarket(city.marketId)
+  const markets = useLatestMarkets()
+  const marketId = markets?.[cityIdx]?.marketId ?? 0n
+  const { market, bucketTotals, isLoading: marketLoading } = useMarket(marketId)
+  const isLoading = marketLoading || markets === null
   const { data: weather } = useWeather(city.code)
   const { isConnected } = useAccount()
   const [selectedBucket, setSelectedBucket] = useState<number | null>(null)
@@ -39,7 +42,7 @@ export default function Markets() {
 
   async function handleBet() {
     if (selectedBucket === null || !amount) return
-    await placeBet(city.marketId, selectedBucket, amount)
+    await placeBet(marketId, selectedBucket, amount)
   }
 
   return (

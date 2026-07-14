@@ -1,12 +1,12 @@
 import { formatUnits } from 'viem'
 import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
-import { useMarket, useContractAddress } from '../hooks/useMarket'
+import { useMarket, useContractAddress, useLatestMarkets } from '../hooks/useMarket'
 
 const network = (import.meta.env.VITE_NETWORK ?? 'mainnet') as 'mainnet' | 'testnet'
 const { symbol } = STABLECOINS[network]
 
-function MarketCard({ city }: { city: typeof CITIES[number] }) {
-  const { market, bucketTotals, isLoading } = useMarket(city.marketId)
+function MarketCard({ city, marketId }: { city: typeof CITIES[number]; marketId: bigint }) {
+  const { market, bucketTotals, isLoading } = useMarket(marketId)
 
   const status = market?.[4] ?? 0
   const totalPool = market?.[5] ?? 0n
@@ -31,7 +31,7 @@ function MarketCard({ city }: { city: typeof CITIES[number] }) {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
               <span style={{ fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: '#464555', letterSpacing: '0.05em' }}>
-                Market #{city.marketId.toString()}
+                Market #{marketId.toString()}
               </span>
               <span style={{
                 padding: '2px 8px', borderRadius: 999, fontSize: 10, fontWeight: 700,
@@ -140,6 +140,7 @@ function MarketCard({ city }: { city: typeof CITIES[number] }) {
 
 export default function MarketStatus() {
   const contractAddress = useContractAddress()
+  const markets = useLatestMarkets()
 
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 24px' }}>
@@ -188,8 +189,8 @@ export default function MarketStatus() {
 
       {/* Market cards */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {CITIES.map(city => (
-          <MarketCard key={city.code} city={city} />
+        {CITIES.map((city, i) => (
+          <MarketCard key={city.code} city={city} marketId={markets?.[i]?.marketId ?? 0n} />
         ))}
       </div>
     </div>
