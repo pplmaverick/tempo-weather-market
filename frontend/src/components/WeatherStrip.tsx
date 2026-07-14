@@ -88,7 +88,7 @@ export default function WeatherStrip({ oracleCity, cityName }: Props) {
                 data.sources.openmeteo   !== undefined && `OM: ${data.sources.openmeteo}°`,
               ].filter(Boolean).join(' | ')}
               {' '}
-              <span style={{ color: '#b8b5c6' }}>({data.sources.count}/3 sources)</span>
+              <span style={{ color: '#b8b5c6' }}>({data.sources.count} {data.sources.count === 1 ? 'source' : 'sources'})</span>
             </div>
           )}
         </div>
