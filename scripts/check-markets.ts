@@ -1,5 +1,5 @@
 /**
- * 查詢市場 #8-11 的 bucket 邊界與狀態
+ * 查詢市場 #13-16 的 bucket 邊界與狀態
  * 執行方式：npx hardhat run scripts/check-markets.ts --network tempo
  */
 import hre from "hardhat";
@@ -13,7 +13,7 @@ async function main() {
   const publicClient = await connection.viem.getPublicClient();
   const artifact = await hre.artifacts.readArtifact("WeatherMarket");
 
-  for (const id of [8, 9, 10, 11]) {
+  for (const id of [13, 14, 15, 16]) {
     const m = (await publicClient.readContract({
       address: CONTRACT_ADDRESS,
       abi: artifact.abi,

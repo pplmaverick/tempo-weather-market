@@ -1,5 +1,5 @@
 /**
- * Market #8-11 lockMarket → submitResult
+ * Market #13-16 lockMarket → submitResult
  *
  * Tempo 主網沒有 native gas token，gas 用 stablecoin（USDC.e）支付，
  * 必須在 viem chain 上帶 feeToken 才會走 Tempo 的 0x76 交易類型（跟
@@ -19,11 +19,10 @@ import { fileURLToPath } from "node:url";
 dotenv.config();
 
 const SETTLEMENTS = [
-  // #8 已在單獨測試中呼叫過 lockMarket（tx 0x5b8b982e...），此處跳過該步驟
-  { marketId: 8, city: "Taipei", predictionType: "HIGH_TEMP", tempX10: 319n, winningBucket: 3, outcome: "NO_WINNER", skipLock: true },
-  { marketId: 9, city: "Tokyo", predictionType: "HIGH_TEMP", tempX10: 261n, winningBucket: 2, outcome: "NO_WINNER", skipLock: false },
-  { marketId: 10, city: "New York", predictionType: "HIGH_TEMP", tempX10: 314n, winningBucket: 4, outcome: "NO_WINNER", skipLock: false },
-  { marketId: 11, city: "Seoul", predictionType: "HIGH_TEMP", tempX10: 289n, winningBucket: 3, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 13, city: "Taipei", predictionType: "HIGH_TEMP", tempX10: 264n, winningBucket: 0, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 14, city: "Tokyo", predictionType: "HIGH_TEMP", tempX10: 292n, winningBucket: 3, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 15, city: "New York", predictionType: "HIGH_TEMP", tempX10: 230n, winningBucket: 0, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 16, city: "Seoul", predictionType: "HIGH_TEMP", tempX10: 260n, winningBucket: 1, outcome: "NO_WINNER", skipLock: false },
 ];
 
 async function main() {
