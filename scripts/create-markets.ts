@@ -1,8 +1,10 @@
 /**
- * 在 Tempo Mainnet 一次開啟四個城市市場（7 天結算窗口）— Market #12-15
+ * 在 Tempo Mainnet 一次開啟四個城市市場 — Market #21-24
  *
  * 城市：Taipei / Tokyo / New York / Seoul
- * 時間：lockTime = now + 6d23h，targetDate = now + 7d
+ * 時間：lockTime = 2026-07-28T13:23:37Z（固定絕對時間，維持與上一輪同一時間點 +7 天）
+ *       targetDate = lockTime + 1h
+ * buckets：以 2026-07-23 查詢的即時氣溫為中心，間距 3°C（沿用上一輪設計）
  *
  * 執行方式：
  *   npx hardhat run scripts/create-markets.ts --network tempo
@@ -26,10 +28,10 @@ dotenv.config();
 
 // ─── 城市設定（bucket 值為 °C × 10）─────────────────────────────────────────
 const CITIES = [
-  { name: "Taipei",   buckets: [280n, 310n, 340n, 370n] },
-  { name: "Tokyo",    buckets: [220n, 250n, 280n, 310n] },
-  { name: "New York", buckets: [270n, 300n, 330n, 360n] },
-  { name: "Seoul",    buckets: [250n, 280n, 310n, 340n] },
+  { name: "Taipei",   buckets: [250n, 280n, 310n, 340n] },
+  { name: "Tokyo",    buckets: [250n, 280n, 310n, 340n] },
+  { name: "New York", buckets: [130n, 160n, 190n, 220n] },
+  { name: "Seoul",    buckets: [220n, 250n, 280n, 310n] },
 ] as const;
 
 // ─── 主流程 ──────────────────────────────────────────────────────────────────
@@ -57,18 +59,17 @@ async function main() {
     transport: http(rpcUrl),
   });
 
-  // 時間設定
-  const now = Math.floor(Date.now() / 1000);
-  const lockTime   = now + 6 * 86400 + 23 * 3600; // +6d23h = 601200s
-  const targetDate = now + 7 * 86400;              // +7d    = 604800s
+  // 時間設定（固定絕對時間，與上一輪同一時間點 +7 天）
+  const lockTime   = 1785245017; // 2026-07-28T13:23:37Z
+  const targetDate = 1785248617; // 2026-07-28T14:23:37Z (lockTime + 1h)
 
   console.log("=".repeat(60));
-  console.log("  Tempo WeatherMarket — 開啟四個市場（7 天窗口）");
+  console.log("  Tempo WeatherMarket — 開啟四個市場（Market #21-24）");
   console.log("=".repeat(60));
   console.log(`  錢包       : ${account.address}`);
   console.log(`  合約       : ${contractAddr}`);
-  console.log(`  lockTime   : ${new Date(lockTime * 1000).toISOString()} (+6d23h)`);
-  console.log(`  targetDate : ${new Date(targetDate * 1000).toISOString()} (+7d)`);
+  console.log(`  lockTime   : ${new Date(lockTime * 1000).toISOString()}`);
+  console.log(`  targetDate : ${new Date(targetDate * 1000).toISOString()}`);
 
   const nextMarketId = (await publicClient.readContract({
     address: contractAddr,
