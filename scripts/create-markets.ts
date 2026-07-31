@@ -1,10 +1,11 @@
 /**
- * 在 Tempo Mainnet 一次開啟四個城市市場 — Market #21-24
+ * 在 Tempo Mainnet 開啟兩個城市市場 — New York / Seoul（本輪只開這兩個）
  *
- * 城市：Taipei / Tokyo / New York / Seoul
- * 時間：lockTime = 2026-07-28T13:23:37Z（固定絕對時間，維持與上一輪同一時間點 +7 天）
+ * 城市：New York / Seoul
+ * 時間：lockTime = 2026-08-14T03:00:00Z（現在 + 14 天，取整點）
  *       targetDate = lockTime + 1h
- * buckets：以 2026-07-23 查詢的即時氣溫為中心，間距 3°C（沿用上一輪設計）
+ * buckets：以 2026-07-31 查詢的即時氣溫為中心，間距 3°C（沿用上一輪設計，
+ *          New York 依需求手動調整為 [260,280,300,320]）
  *
  * 執行方式：
  *   npx hardhat run scripts/create-markets.ts --network tempo
@@ -28,10 +29,8 @@ dotenv.config();
 
 // ─── 城市設定（bucket 值為 °C × 10）─────────────────────────────────────────
 const CITIES = [
-  { name: "Taipei",   buckets: [250n, 280n, 310n, 340n] },
-  { name: "Tokyo",    buckets: [250n, 280n, 310n, 340n] },
-  { name: "New York", buckets: [130n, 160n, 190n, 220n] },
-  { name: "Seoul",    buckets: [220n, 250n, 280n, 310n] },
+  { name: "New York", buckets: [260n, 280n, 300n, 320n] },
+  { name: "Seoul",    buckets: [250n, 280n, 310n, 340n] },
 ] as const;
 
 // ─── 主流程 ──────────────────────────────────────────────────────────────────
@@ -59,12 +58,12 @@ async function main() {
     transport: http(rpcUrl),
   });
 
-  // 時間設定（固定絕對時間，與上一輪同一時間點 +7 天）
-  const lockTime   = 1785245017; // 2026-07-28T13:23:37Z
-  const targetDate = 1785248617; // 2026-07-28T14:23:37Z (lockTime + 1h)
+  // 時間設定（現在 + 14 天，取整點）
+  const lockTime   = 1786676400; // 2026-08-14T03:00:00Z
+  const targetDate = 1786680000; // 2026-08-14T04:00:00Z (lockTime + 1h)
 
   console.log("=".repeat(60));
-  console.log("  Tempo WeatherMarket — 開啟四個市場（Market #21-24）");
+  console.log("  Tempo WeatherMarket — 開啟兩個市場（New York / Seoul）");
   console.log("=".repeat(60));
   console.log(`  錢包       : ${account.address}`);
   console.log(`  合約       : ${contractAddr}`);
@@ -85,7 +84,7 @@ async function main() {
     const { name: city, buckets } = CITIES[i];
 
     console.log("\n" + "─".repeat(60));
-    console.log(`[${i + 1}/4] 建立市場：${city}`);
+    console.log(`[${i + 1}/${CITIES.length}] 建立市場：${city}`);
     console.log(`  buckets : [${buckets.join(", ")}] → ${buckets.length + 1} 個區間`);
 
     const txHash = await walletClient.writeContract({
@@ -134,7 +133,7 @@ async function main() {
 
   // ─── 摘要 ───────────────────────────────────────────────────────────────────
   console.log("\n" + "=".repeat(60));
-  console.log("  ✅  四個市場全部建立完成！");
+  console.log("  ✅  市場全部建立完成！");
   console.log("=".repeat(60));
   for (const r of results) {
     console.log(`\n  【${r.city}】`);

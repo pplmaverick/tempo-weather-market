@@ -1,7 +1,8 @@
 /**
- * Market #17-20 lockMarket → submitResult
+ * Market #21-24 lockMarket → submitResult
  *
- * 溫度來源：Open-Meteo Archive API, 2026-07-21 08:00 UTC (index[8])
+ * 溫度來源：Open-Meteo Archive API, 2026-07-28 13:00 UTC (index[13])
+ * （lockTime = 2026-07-28T13:23:37Z，取最接近的整點）
  *
  * Tempo 主網沒有 native gas token，gas 用 stablecoin（USDC.e）支付，
  * 必須在 viem chain 上帶 feeToken 才會走 Tempo 的 0x76 交易類型（跟
@@ -21,10 +22,10 @@ import { fileURLToPath } from "node:url";
 dotenv.config();
 
 const SETTLEMENTS = [
-  { marketId: 17, city: "Taipei", predictionType: "HIGH_TEMP", tempX10: 292n, winningBucket: 1, outcome: "NO_WINNER", skipLock: false },
-  { marketId: 18, city: "Tokyo", predictionType: "HIGH_TEMP", tempX10: 358n, winningBucket: 4, outcome: "NO_WINNER", skipLock: false },
-  { marketId: 19, city: "New York", predictionType: "HIGH_TEMP", tempX10: 226n, winningBucket: 0, outcome: "NO_WINNER", skipLock: false },
-  { marketId: 20, city: "Seoul", predictionType: "HIGH_TEMP", tempX10: 252n, winningBucket: 1, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 21, city: "Taipei", predictionType: "HIGH_TEMP", tempX10: 282n, winningBucket: 2, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 22, city: "Tokyo", predictionType: "HIGH_TEMP", tempX10: 259n, winningBucket: 1, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 23, city: "New York", predictionType: "HIGH_TEMP", tempX10: 225n, winningBucket: 4, outcome: "NO_WINNER", skipLock: false },
+  { marketId: 24, city: "Seoul", predictionType: "HIGH_TEMP", tempX10: 265n, winningBucket: 2, outcome: "NO_WINNER", skipLock: false },
 ];
 
 async function main() {
