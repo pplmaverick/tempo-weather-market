@@ -1,17 +1,26 @@
 import { useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 import { formatUnits } from 'viem'
-import { MARKET_STATUS, STABLECOINS, formatBucketLabels } from '../config/contracts'
+import { MARKET_STATUS, STABLECOINS, WEATHER_MARKET_ABI, CONTRACTS, formatBucketLabels } from '../config/contracts'
 import { useMarket, useUserBets, useAllUserBets } from '../hooks/useMarket'
 import { usePlaceBet } from '../hooks/usePlaceBet'
+import { activeChain } from '../config/wagmi'
 
 const network = (import.meta.env.VITE_NETWORK ?? 'mainnet') as 'mainnet' | 'testnet'
 const { symbol } = STABLECOINS[network]
+const contractAddress = CONTRACTS[network]
 
 function BetRow({ marketId, userAddress }: { marketId: bigint; userAddress: `0x${string}` }) {
   const { market, bucketTotals } = useMarket(marketId)
   const userBets = useUserBets(marketId, userAddress)
   const { claimWinnings, step } = usePlaceBet()
+  const { data: alreadyClaimed } = useReadContract({
+    address: contractAddress,
+    abi: WEATHER_MARKET_ABI,
+    functionName: 'claimed',
+    args: [marketId, userAddress],
+    chainId: activeChain.id,
+  })
 
   const cityName = market?.[0] ?? '—'
   const status = market?.[4] ?? 0
@@ -33,7 +42,8 @@ function BetRow({ marketId, userAddress }: { marketId: bigint; userAddress: `0x$
     ? new Date(Number(market[2]) * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     : '—'
 
-  const canClaim = status === MARKET_STATUS.SETTLED && !noWinner && userBets?.[winningBucket ?? 0] && (userBets?.[winningBucket ?? 0] ?? 0n) > 0n
+  const isWinner = status === MARKET_STATUS.SETTLED && !noWinner && (userBets?.[winningBucket ?? 0] ?? 0n) > 0n
+  const canClaim = isWinner && !alreadyClaimed
 
   function estimateWinnings(bucketIdx: number): string {
     const myBet = userBets?.[bucketIdx] ?? 0n
@@ -94,7 +104,10 @@ function BetRow({ marketId, userAddress }: { marketId: bigint; userAddress: `0x$
           <span style={{ color: '#92400e', fontSize: 14 }}>🔒 Awaiting Oracle</span>
         )}
         {status === MARKET_STATUS.SETTLED && noWinner && (
-          <span style={{ color: '#777587', fontSize: 14 }}>No Winner — Refund</span>
+          <span style={{ color: '#777587', fontSize: 14 }}>{alreadyClaimed ? 'Refunded' : 'No Winner — Refund'}</span>
+        )}
+        {isWinner && alreadyClaimed && (
+          <span style={{ color: '#15803d', fontSize: 14 }}>✓ Claimed</span>
         )}
         {canClaim && (
           <div>
@@ -114,7 +127,7 @@ function BetRow({ marketId, userAddress }: { marketId: bigint; userAddress: `0x$
             </button>
           </div>
         )}
-        {status === MARKET_STATUS.SETTLED && !noWinner && !canClaim && (
+        {status === MARKET_STATUS.SETTLED && !noWinner && !isWinner && (
           <span style={{ color: '#ba1a1a', fontSize: 14 }}>Lost</span>
         )}
       </td>
