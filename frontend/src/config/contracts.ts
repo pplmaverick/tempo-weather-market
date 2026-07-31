@@ -39,6 +39,17 @@ export const BUCKET_BOUNDARIES = [250n, 280n, 310n, 340n] as const
 
 export const MARKET_STATUS = { OPEN: 0, LOCKED: 1, SETTLED: 2 } as const
 
+// 依市場實際的 on-chain buckets（°C x10 上界陣列）產生顯示用標籤，
+// 不要用 CITIES[].bucketLabels——那組是寫死的舊資料，每輪 buckets 都會變動，會跟實際門檻對不上。
+export function formatBucketLabels(buckets: readonly bigint[]): string[] {
+  return buckets.map((upper, i) => {
+    const upperC = Number(upper) / 10
+    if (i === 0) return `< ${upperC}°C`
+    const lowerC = Number(buckets[i - 1]) / 10
+    return `${lowerC}–${upperC}°C`
+  }).concat(`> ${Number(buckets[buckets.length - 1]) / 10}°C`)
+}
+
 export const WEATHER_MARKET_ABI = [
   {
     inputs: [],

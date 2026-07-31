@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { formatUnits } from 'viem'
-import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
+import { CITIES, MARKET_STATUS, STABLECOINS, formatBucketLabels } from '../config/contracts'
 import { useMarket, useLatestMarkets } from '../hooks/useMarket'
 import { useWeather } from '../hooks/useWeather'
 import { usePlaceBet } from '../hooks/usePlaceBet'
@@ -13,11 +13,24 @@ const { symbol } = STABLECOINS[network]
 
 export default function Markets() {
   const [cityIdx, setCityIdx] = useState(0)
-  const city = CITIES[cityIdx]
+  const [autoSelected, setAutoSelected] = useState(false)
   const markets = useLatestMarkets()
-  const marketId = markets?.[cityIdx]?.marketId ?? 0n
+
+  // 預設選第一個狀態為 OPEN 的城市；沒有 OPEN 市場才 fallback 到第一個 tab（Taipei）。
+  // 只在資料首次載入時自動選一次，之後尊重使用者手動點的 tab。
+  useEffect(() => {
+    if (autoSelected || !markets) return
+    const openIdx = markets.findIndex(m => m.status === MARKET_STATUS.OPEN)
+    setCityIdx(openIdx !== -1 ? openIdx : 0)
+    setAutoSelected(true)
+  }, [markets, autoSelected])
+
+  const city = CITIES[cityIdx]
+  const hasMarket = markets ? markets[cityIdx]?.status !== -1 : true
+  const marketId = hasMarket ? (markets?.[cityIdx]?.marketId ?? 0n) : 0n
   const { market, bucketTotals, isLoading: marketLoading } = useMarket(marketId)
-  const isLoading = marketLoading || markets === null
+  const isLoading = (hasMarket && marketLoading) || markets === null
+  const bucketLabels = hasMarket && market?.[8]?.length ? formatBucketLabels(market[8] as readonly bigint[]) : city.bucketLabels
   const { data: weather } = useWeather(city.code)
   const { isConnected } = useAccount()
   const [selectedBucket, setSelectedBucket] = useState<number | null>(null)
@@ -30,7 +43,9 @@ export default function Markets() {
   const lockTime = market?.[3] ? new Date(Number(market[3]) * 1000) : null
   const timeLeft = lockTime ? Math.max(0, Math.floor((lockTime.getTime() - Date.now()) / 3600000)) : 0
 
-  const statusBadge = status === MARKET_STATUS.OPEN
+  const statusBadge = !hasMarket
+    ? { label: 'NO MARKET', bg: '#edeeef', color: '#575e70', border: '#c7c4d8' }
+    : status === MARKET_STATUS.OPEN
     ? { label: 'OPEN', bg: '#dcfce7', color: '#15803d', border: '#bbf7d0' }
     : status === MARKET_STATUS.LOCKED
     ? { label: 'LOCKED', bg: '#fef3c7', color: '#92400e', border: '#fde68a' }
@@ -121,7 +136,7 @@ export default function Markets() {
               onSelect={setSelectedBucket}
               status={status}
               winningBucket={market?.[7]}
-              labels={[...city.bucketLabels]}
+              labels={bucketLabels}
             />
 
             {status === MARKET_STATUS.SETTLED && market?.[9] === false && (
@@ -132,7 +147,7 @@ export default function Markets() {
                 </div>
                 <div style={{ marginTop: 8, fontSize: 14, color: '#464555' }}>
                   Final Temp: <strong>{market?.[6] !== undefined ? (Number(market[6]) / 10).toFixed(1) : '—'}°C</strong>
-                  {' · '}Winning Range: <strong>{city.bucketLabels[market?.[7] ?? 0]}</strong>
+                  {' · '}Winning Range: <strong>{bucketLabels[market?.[7] ?? 0]}</strong>
                 </div>
               </div>
             )}
@@ -147,7 +162,11 @@ export default function Markets() {
         }}>
           <h3 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 600 }}>Place Your Position</h3>
 
-          {status !== MARKET_STATUS.OPEN ? (
+          {!hasMarket ? (
+            <div style={{ padding: 16, background: '#f3f4f5', borderRadius: 8, color: '#464555', textAlign: 'center', fontSize: 14 }}>
+              No market has been created for {city.name} yet.
+            </div>
+          ) : status !== MARKET_STATUS.OPEN ? (
             <div style={{ padding: 16, background: '#f3f4f5', borderRadius: 8, color: '#464555', textAlign: 'center', fontSize: 14 }}>
               Market is {statusBadge.label.toLowerCase()} — betting closed.
             </div>
@@ -162,7 +181,7 @@ export default function Markets() {
                   minHeight: 42,
                 }}>
                   <span style={{ fontWeight: 600, fontSize: 16 }}>
-                    {selectedBucket !== null ? city.bucketLabels[selectedBucket] : <span style={{ color: '#777587' }}>Select a range above</span>}
+                    {selectedBucket !== null ? bucketLabels[selectedBucket] : <span style={{ color: '#777587' }}>Select a range above</span>}
                   </span>
                 </div>
               </div>

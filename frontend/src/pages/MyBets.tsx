@@ -1,26 +1,26 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { formatUnits } from 'viem'
-import { CITIES, MARKET_STATUS, STABLECOINS } from '../config/contracts'
-import { useMarket, useUserBets, useLatestMarkets } from '../hooks/useMarket'
+import { MARKET_STATUS, STABLECOINS, formatBucketLabels } from '../config/contracts'
+import { useMarket, useUserBets, useAllUserBets } from '../hooks/useMarket'
 import { usePlaceBet } from '../hooks/usePlaceBet'
 
 const network = (import.meta.env.VITE_NETWORK ?? 'mainnet') as 'mainnet' | 'testnet'
 const { symbol } = STABLECOINS[network]
 
-function CityBetRow({ city, marketId, userAddress }: { city: typeof CITIES[number]; marketId: bigint; userAddress: `0x${string}` }) {
+function BetRow({ marketId, userAddress }: { marketId: bigint; userAddress: `0x${string}` }) {
   const { market, bucketTotals } = useMarket(marketId)
   const userBets = useUserBets(marketId, userAddress)
   const { claimWinnings, step } = usePlaceBet()
 
+  const cityName = market?.[0] ?? '—'
   const status = market?.[4] ?? 0
   const totalPool = market?.[5] ?? 0n
   const winningBucket = market?.[7]
   const noWinner = market?.[9]
+  const bucketLabels = market?.[8]?.length ? formatBucketLabels(market[8] as readonly bigint[]) : []
 
   const totalBet = userBets?.reduce((a, b) => a + b, 0n) ?? 0n
-  if (totalBet === 0n) return null
-
   const userBuckets = userBets?.map((amt, i) => ({ amt, i })).filter(b => b.amt > 0n) ?? []
 
   const statusBadge = status === MARKET_STATUS.OPEN
@@ -45,10 +45,13 @@ function CityBetRow({ city, marketId, userAddress }: { city: typeof CITIES[numbe
     return Number(formatUnits(gross - fee, 6)).toFixed(2)
   }
 
+  if (totalBet === 0n) return null // 讀取完成前或資料異常時的保險，不應該發生（marketId 來自 useAllUserBets 篩選結果）
+
   return (
     <tr style={{ borderBottom: '1px solid #edeeef' }}>
       <td style={{ padding: '16px 20px' }}>
-        <span style={{ fontSize: 16, fontWeight: 600 }}>{city.name}</span>
+        <span style={{ fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: '#777587', display: 'block' }}>#{marketId.toString()}</span>
+        <span style={{ fontSize: 16, fontWeight: 600 }}>{cityName}</span>
       </td>
       <td style={{ padding: '16px 20px', color: '#464555', fontSize: 14, fontFamily: "'JetBrains Mono', monospace" }}>
         {targetDate}
@@ -63,7 +66,7 @@ function CityBetRow({ city, marketId, userAddress }: { city: typeof CITIES[numbe
               color: status === MARKET_STATUS.SETTLED && winningBucket === b.i ? '#4d41df' : '#191c1d',
               fontWeight: status === MARKET_STATUS.SETTLED && winningBucket === b.i ? 700 : 400,
             }}>
-              {city.bucketLabels[b.i]}
+              {bucketLabels[b.i] ?? `bucket ${b.i}`}
             </span>
             <span style={{ fontSize: 13, color: '#464555', fontFamily: "'JetBrains Mono', monospace" }}>
               {Number(formatUnits(b.amt, 6)).toFixed(2)} {symbol}
@@ -122,7 +125,7 @@ function CityBetRow({ city, marketId, userAddress }: { city: typeof CITIES[numbe
 export default function MyBets() {
   const { address, isConnected } = useAccount()
   const [filter, setFilter] = useState<'all' | 'active' | 'history'>('all')
-  const markets = useLatestMarkets()
+  const { marketIds, isLoading } = useAllUserBets(address)
 
   if (!isConnected) {
     return (
@@ -179,7 +182,7 @@ export default function MyBets() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: '#fff', borderBottom: '1px solid #c7c4d8' }}>
-                {['City', 'Target Date', 'Range Bet On', 'Stake', 'Status', 'Result / Action'].map((h, i) => (
+                {['Market', 'Target Date', 'Range Bet On', 'Stake', 'Status', 'Result / Action'].map((h, i) => (
                   <th
                     key={h}
                     style={{
@@ -194,13 +197,18 @@ export default function MyBets() {
               </tr>
             </thead>
             <tbody>
-              {address && CITIES.map((city, i) => (
-                <CityBetRow key={city.code} city={city} marketId={markets?.[i]?.marketId ?? 0n} userAddress={address} />
+              {address && marketIds.map(id => (
+                <BetRow key={id.toString()} marketId={id} userAddress={address} />
               ))}
             </tbody>
           </table>
+          {!isLoading && marketIds.length === 0 && (
+            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#777587', fontSize: 14 }}>
+              No bets found for this wallet.
+            </div>
+          )}
           <div style={{ padding: '12px 20px', background: '#f3f4f5', borderTop: '1px solid #c7c4d8', fontSize: 13, color: '#464555' }}>
-            Showing markets: {CITIES.map(c => c.name).join(', ')}
+            {isLoading ? 'Scanning all markets…' : `Found bets in ${marketIds.length} market${marketIds.length === 1 ? '' : 's'}.`}
           </div>
         </div>
       </div>
