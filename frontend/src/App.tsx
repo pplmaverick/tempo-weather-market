@@ -6,6 +6,7 @@ import Layout from './components/Layout'
 import Markets from './pages/Markets'
 import MyBets from './pages/MyBets'
 import MarketStatus from './pages/MarketStatus'
+import Admin from './pages/Admin'
 
 const queryClient = new QueryClient()
 
@@ -19,6 +20,7 @@ export default function App() {
               <Route index element={<Markets />} />
               <Route path="my-bets" element={<MyBets />} />
               <Route path="market-status" element={<MarketStatus />} />
+              <Route path="admin" element={<Admin />} />
             </Route>
           </Routes>
         </BrowserRouter>

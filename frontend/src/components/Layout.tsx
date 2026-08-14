@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { injected } from 'wagmi/connectors'
+import { useIsOwner } from '../hooks/useAdmin'
 
 const network = (import.meta.env.VITE_NETWORK ?? 'mainnet') as 'mainnet' | 'testnet'
 
@@ -8,6 +9,7 @@ export default function Layout() {
   const { address, isConnected } = useAccount()
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
+  const { isOwner } = useIsOwner()
 
   const short = address ? `${address.slice(0, 6)}…${address.slice(-4)}` : ''
 
@@ -31,6 +33,7 @@ export default function Layout() {
                 { to: '/', label: 'Markets' },
                 { to: '/my-bets', label: 'My Bets' },
                 { to: '/market-status', label: 'Market Status' },
+                ...(isOwner ? [{ to: '/admin', label: 'Admin' }] : []),
               ].map(({ to, label }) => (
                 <NavLink
                   key={to}

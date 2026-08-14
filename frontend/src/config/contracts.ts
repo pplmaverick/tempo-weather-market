@@ -50,6 +50,15 @@ export function formatBucketLabels(buckets: readonly bigint[]): string[] {
   }).concat(`> ${Number(buckets[buckets.length - 1]) / 10}°C`)
 }
 
+// 對應合約 _determineWinningBucket 的邏輯（第一個 temp <= buckets[i] 的 index，否則落到最上層溢出區間）。
+// 用於 Admin 端在送出 submitResult 前，預覽送出後會判定的 winning bucket 與 memo。
+export function determineWinningBucket(buckets: readonly bigint[], temp: bigint): number {
+  for (let i = 0; i < buckets.length; i++) {
+    if (temp <= buckets[i]) return i
+  }
+  return buckets.length
+}
+
 export const WEATHER_MARKET_ABI = [
   {
     inputs: [],
@@ -142,6 +151,56 @@ export const WEATHER_MARKET_ABI = [
     stateMutability: 'nonpayable',
     inputs: [{ name: 'marketId', type: 'uint256' }],
     outputs: [],
+  },
+  {
+    name: 'owner',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ name: '', type: 'address' }],
+  },
+  {
+    name: 'createMarket',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'city', type: 'string' },
+      { name: 'predictionType', type: 'string' },
+      { name: 'targetDate', type: 'uint256' },
+      { name: 'buckets', type: 'int256[]' },
+      { name: 'lockTime', type: 'uint256' },
+    ],
+    outputs: [{ name: 'marketId', type: 'uint256' }],
+  },
+  {
+    name: 'lockMarket',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [{ name: 'marketId', type: 'uint256' }],
+    outputs: [],
+  },
+  {
+    name: 'submitResult',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'marketId', type: 'uint256' },
+      { name: 'finalTemp', type: 'int256' },
+      { name: 'memo', type: 'string' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'event',
+    name: 'MarketCreated',
+    inputs: [
+      { indexed: true, name: 'marketId', type: 'uint256' },
+      { indexed: false, name: 'city', type: 'string' },
+      { indexed: false, name: 'predictionType', type: 'string' },
+      { indexed: false, name: 'targetDate', type: 'uint256' },
+      { indexed: false, name: 'lockTime', type: 'uint256' },
+      { indexed: false, name: 'bucketCount', type: 'uint256' },
+    ],
   },
 ] as const
 
