@@ -26,7 +26,7 @@ This project wasn't ported from another chain. Every design decision maps direct
 | Oracle needs compensation for settlement work | Side payment, then manual verification | MPP — fee collected atomically inside `submitResult()` |
 | Prove what outcome was settled and why | Parse event logs after the fact | Payment Memo — structured string written on-chain at settlement time |
 | Users shouldn't need gas tokens just to place a bet | Require users to bridge and hold native token | Fee Sponsorship — relayer submits the tx, gasTank covers the cost |
-| Market must stop accepting bets at a precise time | External keeper or cron job | Scheduled Transactions — IScheduler precompile called from within `createMarket()` |
+| Market must stop accepting bets at a precise time | External keeper or cron job | Scheduled Transactions — IScheduler precompile called from within `createMarket()` (built into the contract; not yet enabled on mainnet — see [Scheduled Transactions](#scheduled-transactions) below) |
 
 The result is a contract that handles its own lifecycle end-to-end: markets lock themselves, oracle payments are enforced by the contract rather than by trust, and bettors interact with a single stablecoin approval.
 
@@ -66,7 +66,9 @@ A `gasTank` mechanism allows the contract owner to pre-fund gas costs so that us
 
 ### Scheduled Transactions
 
-When creating a market, the contract calls the `IScheduler` precompile to schedule an automatic `lockMarket()` call at `lockTime`. No off-chain cron jobs needed for market locking.
+> **Status: implemented in the contract, not yet enabled on mainnet.** The deployed mainnet contract's `scheduler` address is currently `address(0)` (see `deployments/tempo.json`), so this path is inactive. `lockMarket()` is called manually today — via the owner-only [Admin UI](https://tempo-weather-market.vercel.app/admin) (`/admin`) or maintenance scripts — once `lockTime` passes.
+
+When a scheduler address is configured via `setScheduler()`, `createMarket()` calls the `IScheduler` precompile to schedule an automatic `lockMarket()` call at `lockTime`, removing the need for off-chain cron jobs or manual calls.
 
 ```solidity
 bytes32 taskId = IScheduler(scheduler).schedule(
@@ -197,7 +199,7 @@ Bucket boundaries use the same x10 encoding as temperatures. Given `buckets = [2
 
 | Milestone | Description | Status |
 |-----------|-------------|--------|
-| M1 | Deploy to testnet + mainnet, Oracle server on VPS, 40/40 tests | ✅ Complete |
+| M1 | Deploy to testnet + mainnet, Oracle server on VPS, 44/44 tests | ✅ Complete |
 | M2 | Oracle retry logic (3 attempts, 2s delay) | ✅ Complete |
 | M3 | Multi-city support: Taipei, Tokyo, New York, Seoul | ✅ Complete |
 | M4 | Developer docs: .env.example with inline comments, README setup guide | ✅ Complete |
