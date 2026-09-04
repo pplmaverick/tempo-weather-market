@@ -176,7 +176,7 @@ export default function MarketStatus() {
           <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: '#464555', marginBottom: 4 }}>DATA SOURCE</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span className="material-symbols-outlined" style={{ color: '#4d41df', fontSize: 20 }}>cloud</span>
-            <span style={{ fontSize: 14, fontWeight: 600 }}>OpenWeather API</span>
+            <span style={{ fontSize: 14, fontWeight: 600 }}>WeatherAPI.com + Open-Meteo (dual-source median)</span>
           </div>
         </div>
         <div>
