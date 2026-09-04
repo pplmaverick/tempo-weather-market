@@ -38,9 +38,14 @@ interface OpenMeteoResponse {
   current: { temperature_2m: number };
 }
 
+// Settlement oracle: dual-source (WeatherAPI + Open-Meteo). OpenWeather is
+// intentionally NOT part of this pipeline — this key's plan doesn't include
+// History/day_summary access (confirmed 401 on both data/3.0/onecall/day_summary
+// and the legacy data/2.5/history/city), and getMaxTemp's "target date already
+// passed" fallback used to substitute *current* weather for a past date, which
+// is a separate, larger bug this refactor does not attempt to fix.
 export interface TempWithSources {
   finalTemp: number;  // °C × 10
-  ow?: number;        // OpenWeather °C × 10
   wa?: number;        // WeatherAPI °C × 10
   om?: number;        // Open-Meteo °C × 10
 }
@@ -68,6 +73,9 @@ function cityParams(city: string): Record<string, string | number> {
     : { q: city, appid: OW_API_KEY, units: "metric" };
 }
 
+// 通用中位數函式，被結算用的雙源 pipeline（固定 2 筆）跟 getCurrentWeather()
+// 的即時天氣顯示（最多 3 筆，含 OpenWeather）共用。
+// 2-source median: 偶數筆數取排序後中間值平均，即 (a+b)/2；奇數筆數取中間值。
 function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
@@ -170,20 +178,19 @@ interface OWForecastItem {
   main: { temp: number; temp_max: number };
 }
 
-// 三源即時溫度取中位數（含各源個別值）
+// Settlement: WeatherAPI + Open-Meteo dual-source median（含各源個別值）
+// 2-source median: 排序後兩筆取中間值平均，即 (a+b)/2（median() 是通用函式，
+// getCurrentWeather() 仍用它算最多 3 筆的 median，這裡固定只餵 2 筆）
 async function fetchCurrentTempWithSources(city: string): Promise<TempWithSources> {
-  const [owResult, waResult, omResult] = await Promise.allSettled([
-    fetchOpenWeatherCurrent(city).then((d) => d.main.temp),
+  const [waResult, omResult] = await Promise.allSettled([
     fetchWeatherAPI(city),
     fetchOpenMeteo(city),
   ]);
 
   const temps: number[] = [];
-  const ow = owResult.status === "fulfilled" ? owResult.value : undefined;
   const wa = waResult.status === "fulfilled" ? waResult.value : undefined;
   const om = omResult.status === "fulfilled" ? omResult.value : undefined;
 
-  if (ow !== undefined) temps.push(ow);
   if (wa !== undefined) temps.push(wa);
   if (om !== undefined) temps.push(om);
 
@@ -191,26 +198,23 @@ async function fetchCurrentTempWithSources(city: string): Promise<TempWithSource
 
   const med = median(temps);
   console.log(
-    `[weather] ${city} temps — OW: ${ow?.toFixed(1) ?? "ERR"} | WA: ${wa?.toFixed(1) ?? "ERR"} | OM: ${om?.toFixed(1) ?? "ERR"} → median: ${med.toFixed(1)}°C`
+    `[weather] ${city} temps — WA: ${wa?.toFixed(1) ?? "ERR"} | OM: ${om?.toFixed(1) ?? "ERR"} → median: ${med.toFixed(1)}°C`
   );
   return {
     finalTemp: Math.round(med * 10),
-    ow: ow !== undefined ? Math.round(ow * 10) : undefined,
     wa: wa !== undefined ? Math.round(wa * 10) : undefined,
     om: om !== undefined ? Math.round(om * 10) : undefined,
   };
 }
 
-// 三源即時溫度取中位數
+// Settlement: WeatherAPI + Open-Meteo dual-source median
 async function fetchCurrentTemp(city: string): Promise<number> {
-  const [owResult, waResult, omResult] = await Promise.allSettled([
-    fetchOpenWeatherCurrent(city).then((d) => d.main.temp),
+  const [waResult, omResult] = await Promise.allSettled([
     fetchWeatherAPI(city),
     fetchOpenMeteo(city),
   ]);
 
   const temps: number[] = [];
-  if (owResult.status === "fulfilled") temps.push(owResult.value);
   if (waResult.status === "fulfilled") temps.push(waResult.value);
   if (omResult.status === "fulfilled") temps.push(omResult.value);
 
@@ -273,7 +277,7 @@ export async function getMaxTemp(city: string, targetDate: Date): Promise<number
   return Math.round(tempC * 10);
 }
 
-// 取得指定城市在 targetDate 的最高氣溫，同時回傳三源個別值（°C × 10）
+// 取得指定城市在 targetDate 的最高氣溫，同時回傳雙源（WeatherAPI + Open-Meteo）個別值（°C × 10）
 export async function getMaxTempWithSources(city: string, targetDate: Date): Promise<TempWithSources> {
   const nowMs = Date.now();
   const targetMs = targetDate.getTime();

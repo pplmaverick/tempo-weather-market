@@ -39,9 +39,11 @@ oracle-server (Express + TypeScript)
     ├── GET  /oracle/market/:id ← n8n polls market status
     └── GET  /oracle/health
          │
-         ├── OpenWeather API    ← fetch real weather data
+         ├── WeatherAPI.com + Open-Meteo Archive API  ← dual-source median oracle
          └── WeatherMarket.sol  ← submitResult() on-chain
 ```
+
+Settlement uses a **dual-source median oracle: WeatherAPI.com + Open-Meteo Archive API**. Each source's individual reading is recorded in the Payment Memo (`wa:`/`om:`) alongside the median `finalTemp`. OpenWeather is used elsewhere in the stack (see below) but is not part of the settlement median.
 
 ## Core Features
 
@@ -97,7 +99,8 @@ bytes32 taskId = IScheduler(scheduler).schedule(
 ### Prerequisites
 - Node.js 18+
 - Docker & Docker Compose (for Oracle server)
-- OpenWeather API key ([free tier](https://openweathermap.org/api))
+- WeatherAPI.com key ([free tier](https://www.weatherapi.com/), 1M calls/month) — settlement oracle source
+- OpenWeather API key ([free tier](https://openweathermap.org/api)) — powers the live weather-strip display only, not settlement
 - Tempo testnet tokens from [faucet](https://faucet.moderato.tempo.xyz/)
 
 ### Local Setup
@@ -110,7 +113,7 @@ npm install
 # Setup Oracle server
 cd oracle-server
 cp .env.example .env
-# Edit .env: fill in OPENWEATHER_API_KEY and ORACLE_PRIVATE_KEY
+# Edit .env: fill in WEATHERAPI_KEY, OPENWEATHER_API_KEY and ORACLE_PRIVATE_KEY
 docker compose up -d
 
 # Run tests
@@ -204,7 +207,7 @@ Bucket boundaries use the same x10 encoding as temperatures. Given `buckets = [2
 | M3 | Multi-city support: Taipei, Tokyo, New York, Seoul | ✅ Complete |
 | M4 | Developer docs: .env.example with inline comments, README setup guide | ✅ Complete |
 | M5 | React frontend on Vercel | ✅ Complete |
-| M6 | Multi-source weather median: OpenWeather + WeatherAPI + Open-Meteo, frontend source breakdown display | ✅ Complete |
+| M6 | Dual-source weather median oracle: WeatherAPI + Open-Meteo (OpenWeather History API is not available on this key's plan, dropped from settlement) | ✅ Complete |
 | M7 | TypeScript SDK | 📋 Planned |
 
 ## Developer

@@ -101,30 +101,27 @@ oracleRouter.post("/settle", async (req: Request, res: Response) => {
     markTxUsed(paymentTxHash);
   }
 
-  // 4. 取得實際氣溫（三源）
+  // 4. 取得實際氣溫（WeatherAPI + Open-Meteo 雙源 median）
   let finalTemp: number;
-  let owTemp: number | undefined;
   let waTemp: number | undefined;
   let omTemp: number | undefined;
   try {
     const targetDate = new Date(Number(market.targetDate) * 1000);
     const result = await getMaxTempWithSources(market.city, targetDate);
     finalTemp = result.finalTemp;
-    owTemp = result.ow;
     waTemp = result.wa;
     omTemp = result.om;
   } catch (err) {
     return res.status(502).json({
-      error: "OpenWeather API 呼叫失敗",
+      error: "氣象資料來源呼叫失敗",
       detail: String(err),
     });
   }
 
-  // 5. 產生 Payment Memo（含三源）
+  // 5. 產生 Payment Memo（含雙源個別值）
   const outcome = determineOutcome(market.buckets, BigInt(finalTemp), market.noWinner);
   let memo = `${market.city}/${market.predictionType}/${finalTemp}/${outcome}`;
   const sourceParts = [
-    owTemp !== undefined ? `ow:${owTemp}` : null,
     waTemp !== undefined ? `wa:${waTemp}` : null,
     omTemp !== undefined ? `om:${omTemp}` : null,
   ].filter(Boolean).join(",");
