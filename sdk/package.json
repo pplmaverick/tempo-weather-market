@@ -1,0 +1,28 @@
+{
+  "name": "@pplmaverick/tempo-weather-sdk",
+  "version": "0.1.0",
+  "description": "Chain config and x10 temperature encoding helpers for the Tempo weather market",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "viem": "^2.49.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "viem": "^2.49.2",
+    "vitest": "^3.0.0"
+  }
+}
