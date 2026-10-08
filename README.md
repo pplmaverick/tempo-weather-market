@@ -15,7 +15,7 @@ Prediction market infrastructure built natively on Tempo Network | Weather as fi
 | Network | Contract Address |
 |---|---|
 | Tempo Mainnet (4217) | [`0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f`](https://explore.tempo.xyz/address/0x072a3a0c04cf8cdcaf5b4a73a4ed4ff5a841531f) |
-| Tempo Moderato Testnet (42431) | [`0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953`](https://explore.tempo.xyz/address/0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953) |
+| Tempo Moderato Testnet (42431) | [`0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953`](https://explore.testnet.tempo.xyz/address/0xcAC5B9d2817325E78090E3Ce4b9C299C819cF953) |
 
 ## Why Tempo-Native
 
@@ -49,7 +49,7 @@ Settlement uses a **dual-source median oracle: WeatherAPI.com + Open-Meteo Archi
 
 ### MPP (Monetized Protocol Primitives)
 
-The oracle calls `submitResult()` to settle markets. When `oracleFee > 0`, the caller must first transfer stablecoins to the oracle address and provide a verified `paymentTxHash`. The contract records a `SettlementReceipt` for every settled market, queryable via `getReceipt(marketId)`.
+The oracle calls `submitResult()` to settle markets. When `oracleFee > 0`, the oracle must first `approve` the contract for at least `oracleFee`; `submitResult()` then pulls the fee from the caller with `safeTransferFrom` and adds it to the contract's `collectedFees`, in the same transaction. There is no `paymentTxHash` parameter. The contract records a `SettlementReceipt` for every settled market, queryable via `getReceipt(marketId)`.
 
 ### Payment Memo
 
@@ -84,8 +84,8 @@ bytes32 taskId = IScheduler(scheduler).schedule(
 
 | Network | Chain ID | RPC | Explorer |
 |---|---|---|---|
-| Tempo Moderato (Testnet) | 42431 | https://rpc.moderato.tempo.xyz | https://explorer.moderato.tempo.xyz |
-| Tempo (Mainnet) | 4217 | https://rpc.tempo.xyz | https://explorer.tempo.xyz |
+| Tempo Moderato (Testnet) | 42431 | https://rpc.moderato.tempo.xyz | https://explore.testnet.tempo.xyz |
+| Tempo (Mainnet) | 4217 | https://rpc.tempo.xyz | https://explore.tempo.xyz |
 
 **Stablecoin addresses**
 
