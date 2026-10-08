@@ -97,7 +97,7 @@ bytes32 taskId = IScheduler(scheduler).schedule(
 ## Quick Start
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 18+ (the SDK's `npm run generate:abi` runs a `.ts` file directly with Node, tested on Node 24)
 - Docker & Docker Compose (for Oracle server)
 - WeatherAPI.com key ([free tier](https://www.weatherapi.com/), 1M calls/month) — settlement oracle source
 - OpenWeather API key ([free tier](https://openweathermap.org/api)) — powers the live weather-strip display only, not settlement
@@ -174,6 +174,27 @@ Bucket boundaries use the same x10 encoding as temperatures. Given `buckets = [2
 | 3 | 31.1°C – 34.0°C |
 | 4 | > 34.0°C |
 
+The SDK's `toX10(celsius)` / `fromX10(v)` helpers implement this encoding (`25.0` ↔ `250n`, `-3.4` ↔ `-34n`) and throw on `NaN` / `Infinity`. `toX10` rounds half away from zero, so at a negative `.5` boundary (e.g. `-2.55°C`) it can differ by 1 from the oracle's `Math.round(temp * 10)`. Settlement always uses the `finalTemp` the oracle submits on-chain.
+
+## TypeScript SDK
+
+`sdk/` is a standalone package, `@pplmaverick/tempo-weather-sdk`. It is **not published to npm yet** and can only be used from this repo. It currently provides chain configs (`tempoMainnet`, `moderato`, `withFeeToken`), the WeatherMarket ABI and deployment addresses, x10 temperature encoding, and a **read-only** market client. Write / bet helpers are not implemented.
+
+```ts
+import { createWeatherMarketClient, tempoMainnet } from "./sdk/src";
+
+const client = createWeatherMarketClient({ chain: tempoMainnet });
+const markets = await client.listMarkets(); // temperatures and buckets in °C, status as "OPEN" | "LOCKED" | "SETTLED"
+const market = await client.getMarket(29);
+```
+
+`sdk/src/abi.ts` is generated from the Hardhat artifact (`artifacts/` is gitignored, so `abi.ts` is committed). Regenerate it after changing the contract:
+
+```bash
+npx hardhat compile            # repo root
+cd sdk && npm run generate:abi
+```
+
 ## Fees & Security
 
 **Fees**
@@ -208,7 +229,7 @@ Bucket boundaries use the same x10 encoding as temperatures. Given `buckets = [2
 | M4 | Developer docs: .env.example with inline comments, README setup guide | ✅ Complete |
 | M5 | React frontend on Vercel | ✅ Complete |
 | M6 | Dual-source weather median oracle: WeatherAPI + Open-Meteo (OpenWeather History API is not available on this key's plan, dropped from settlement) | ✅ Complete |
-| M7 | TypeScript SDK | 📋 Planned |
+| M7 | TypeScript SDK (`sdk/`) — read-only client done; write / bet helpers not yet implemented | 🚧 In progress |
 
 ## Developer
 
