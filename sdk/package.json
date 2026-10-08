@@ -11,16 +11,20 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "generate:abi": "node scripts/generate-abi.ts"
   },
   "peerDependencies": {
     "viem": "^2.49.0"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.7.0",
     "viem": "^2.49.2",
     "vitest": "^3.0.0"

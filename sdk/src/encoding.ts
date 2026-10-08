@@ -1,6 +1,11 @@
 // x10 encoding, matching WeatherMarket.sol: celsius * 10 as int256 (e.g. 25.0°C <-> 250n, -3.4°C <-> -34n).
 
-/** Celsius -> x10 bigint. Rounds half away from zero. Throws on NaN/±Infinity. */
+/**
+ * Celsius -> x10 bigint. Rounds half away from zero. Throws on NaN/±Infinity.
+ *
+ * Note: rounding away from zero can differ by 1 from the oracle's `Math.round` at negative .5
+ * boundaries (e.g. -2.55 -> -26n here, -25 from Math.round). Settlement uses the value the oracle submits.
+ */
 export function toX10(celsius: number): bigint {
   if (!Number.isFinite(celsius)) {
     throw new RangeError(`toX10: celsius must be a finite number, got ${celsius}`);
