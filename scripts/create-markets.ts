@@ -2,10 +2,10 @@
  * 在 Tempo Mainnet 開啟兩個城市市場 — New York / Seoul（本輪只開這兩個）
  *
  * 城市：New York / Seoul
- * 時間：lockTime = 2026-08-14T03:00:00Z（現在 + 14 天，取整點）
+ * 時間：lockTime = 2026-10-22T03:00:00Z（現在 + 14 天，取整點）
  *       targetDate = lockTime + 1h
- * buckets：以 2026-07-31 查詢的即時氣溫為中心，間距 3°C（沿用上一輪設計，
- *          New York 依需求手動調整為 [260,280,300,320]）
+ * buckets：依 2026-10-08 Open-Meteo 預報與 10 月氣候平均，間距 2.5°C
+ *          New York [145,170,195,220]；Seoul [180,205,230,255]
  *
  * 執行方式：
  *   npx hardhat run scripts/create-markets.ts --network tempo
@@ -29,8 +29,8 @@ dotenv.config();
 
 // ─── 城市設定（bucket 值為 °C × 10）─────────────────────────────────────────
 const CITIES = [
-  { name: "New York", buckets: [260n, 280n, 300n, 320n] },
-  { name: "Seoul",    buckets: [250n, 280n, 310n, 340n] },
+  { name: "New York", buckets: [145n, 170n, 195n, 220n] },
+  { name: "Seoul",    buckets: [180n, 205n, 230n, 255n] },
 ] as const;
 
 // ─── 主流程 ──────────────────────────────────────────────────────────────────
@@ -59,8 +59,8 @@ async function main() {
   });
 
   // 時間設定（現在 + 14 天，取整點）
-  const lockTime   = 1786676400; // 2026-08-14T03:00:00Z
-  const targetDate = 1786680000; // 2026-08-14T04:00:00Z (lockTime + 1h)
+  const lockTime   = 1792638000; // 2026-10-22T03:00:00Z
+  const targetDate = 1792641600; // 2026-10-22T04:00:00Z (lockTime + 1h)
 
   console.log("=".repeat(60));
   console.log("  Tempo WeatherMarket — 開啟兩個市場（New York / Seoul）");
@@ -76,7 +76,7 @@ async function main() {
     functionName: "nextMarketId",
   })) as bigint;
   console.log(`\n  目前 nextMarketId : ${nextMarketId}`);
-  console.log(`  預計市場 #        : ${nextMarketId} ~ ${nextMarketId + 3n}`);
+  console.log(`  預計市場 #        : ${nextMarketId} ~ ${nextMarketId + 1n}`);
 
   const results: { city: string; marketId: bigint; txHash: Hex }[] = [];
 
